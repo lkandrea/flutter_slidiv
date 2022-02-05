@@ -1,4 +1,4 @@
-# flutter_application_1
+# Slidiv
 
 A new Flutter project.
 
