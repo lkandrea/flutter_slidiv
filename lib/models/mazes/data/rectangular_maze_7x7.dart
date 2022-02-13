@@ -18,7 +18,7 @@ class RectangularMaze_7x7 implements MazeData {
 0 1 0 1
 0 0 1 1
 1 1 0 0
-1 1 1 1
+1 0 1 1
 0 1 1 0
 1 0 0 1
 0 1 1 0
@@ -48,11 +48,11 @@ class RectangularMaze_7x7 implements MazeData {
 0 1 0 0
 0 0 1 1
 1 1 0 0
-1 0 1 0
-1 0 1 0
+0 1 0 1
+0 1 0 1
 0 0 1 1 o
 1 1 0 0
-1 0 1 0
+0 1 0 1
 1 0 0 1""";
   }
 
