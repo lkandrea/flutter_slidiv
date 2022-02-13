@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter_application_1/models/mazes/data/maze_data.dart';
 import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
@@ -17,9 +16,13 @@ class RectangularMaze {
 
   RectangularTile get currentTile => tiles.firstWhere((tile) => tile.occupied);
 
+  int get currentTileIndex => tiles.indexOf(currentTile);
+
   // TODO Render UI after creating maze
-  static RectangularMaze create(String mazeFilePath, int width, int height) {
-    List<RectangularTile> tiles = File(mazeFilePath).readAsLinesSync()
+  static RectangularMaze create(MazeData mazeData) {
+    List<RectangularTile> tiles = mazeData.getMazeString()
+      .split("\n")
+      .where((line) => line.trim().isNotEmpty)
       .map((line) {
         List<String> sideConfigurations = line.split(" ")
           .toList();
@@ -36,13 +39,14 @@ class RectangularMaze {
       })
       .toList();
     
-    return RectangularMaze(width: width, height: height, tiles: tiles, lastValidMovement: null);
+    return RectangularMaze(width: mazeData.getWidth(), height: mazeData.getHeight(), tiles: tiles, lastValidMovement: null);
   }
 
   RectangularMaze moveCurrentTile(RectangularMovement movement) {
     if (currentTile.getPossibleMoves(lastValidMovement).contains(movement)) {
-      currentTile.leave();
-      getNextTile(movement).occupy();
+      tiles.setAll(currentTileIndex, [currentTile.leave()]);
+      RectangularTile nextTile = getNextTile(movement);
+      tiles.setAll(tiles.indexOf(nextTile), [nextTile.occupy()]);
       
       return RectangularMaze(width: width, height: height, tiles: tiles, lastValidMovement: movement);
     }
@@ -50,8 +54,6 @@ class RectangularMaze {
   }
 
   RectangularTile getNextTile(RectangularMovement movement) {
-    int currentTileIndex = tiles.indexOf(currentTile);
-
     if (movement == RectangularMovement.up) {
       return tiles.elementAt(currentTileIndex - width);
     }
