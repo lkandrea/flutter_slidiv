@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/models/models.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,6 +51,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  RectangularMaze maze = RectangularMaze.create(RectangularMaze_7x7());
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -59,6 +62,17 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  double inverse(int num) {
+    if (num == 1) {
+      return 0;
+    }
+    return 1;
+  }
+
+  bool hasBorder(int num) {
+    return num != 1;
   }
 
   @override
@@ -96,12 +110,46 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              '7x7 Maze'
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            Column(
+              children: List.generate(maze.tiles.length, (columnIndex) {
+                if (columnIndex % maze.width == 0) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(maze.width, (rowIndex) {
+                      RectangularTile tile = maze.tiles.elementAt(columnIndex + rowIndex);
+                      RectangularSide tileSide = tile.side;
+                      
+                      return Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: hasBorder(tileSide.down) ? BorderSide(width: inverse(tileSide.down)) : BorderSide.none,
+                            left: hasBorder(tileSide.left) ? BorderSide(width: inverse(tileSide.left)) : BorderSide.none,
+                            right: hasBorder(tileSide.right) ? BorderSide(width: inverse(tileSide.right)) : BorderSide.none,
+                            top: hasBorder(tileSide.up) ? BorderSide(width: inverse(tileSide.up)) : BorderSide.none
+                          ),
+                          color: Colors.green[100],
+                        ),
+                        child: tile.occupied ? Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red
+                          )
+                        ) : Container()
+                      );
+                    })
+                  );
+                }
+                return Container();
+              })
+            )
           ],
         ),
       ),
