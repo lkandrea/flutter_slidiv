@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            RectangularMaze(),
+            RectangularMaze(RectangularMaze_7x7()),
           ],
         ),
       ),

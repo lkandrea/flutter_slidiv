@@ -1,22 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/sides/sides.dart';
 
-class RectangularTile extends StatefulWidget {
-  const RectangularTile(this.side, this.initOccupied, {Key? key})
+class RectangularTile extends StatelessWidget {
+  const RectangularTile(this.side, this.occupied, {Key? key})
       : super(key: key);
 
-  final RectangularSide side;
-  final bool initOccupied;
-
-  @override
-  State<RectangularTile> createState() => _RectangularTileState();
-}
-
-class _RectangularTileState extends State<RectangularTile> {
   final _tileWidth = 50.0;
   final _tileHeight = 50.0;
-  bool? occupied;
+
+  final RectangularSide side;
+  final bool occupied;
 
   //
   // List<RectangularMovement> getPossibleMoves(
@@ -29,14 +22,6 @@ class _RectangularTileState extends State<RectangularTile> {
   //   return [];
   // }
 
-  // RectangularTile occupy() {
-  //   return RectangularTile(side: widget.side, initOccupied: true);
-  // }
-  //
-  // RectangularTile leave() {
-  //   return RectangularTile(side: widget.side, occupied: false);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,22 +29,15 @@ class _RectangularTileState extends State<RectangularTile> {
       height: _tileHeight,
       decoration: BoxDecoration(
         border: Border(
-            bottom: hasBorder(widget.side.down)
-                ? BorderSide(width: inverse(widget.side.down))
-                : BorderSide.none,
-            left: hasBorder(widget.side.left)
-                ? BorderSide(width: inverse(widget.side.left))
-                : BorderSide.none,
-            right: hasBorder(widget.side.right)
-                ? BorderSide(width: inverse(widget.side.right))
-                : BorderSide.none,
-            top: hasBorder(widget.side.up)
-                ? BorderSide(width: inverse(widget.side.up))
-                : BorderSide.none),
+          bottom: _createBorder(side.down),
+          left: _createBorder(side.left),
+          right: _createBorder(side.right),
+          top: _createBorder(side.up),
+        ),
         color: Colors.green[100],
       ),
       child: Visibility(
-        visible: occupied ?? widget.initOccupied,
+        visible: occupied,
         child: Container(
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
@@ -70,14 +48,16 @@ class _RectangularTileState extends State<RectangularTile> {
     );
   }
 
+  BorderSide _createBorder(int borderSide) {
+    return borderSide != 1
+        ? BorderSide(width: inverse(borderSide))
+        : BorderSide.none;
+  }
+
   double inverse(int num) {
     if (num == 1) {
       return 0;
     }
     return 1;
-  }
-
-  bool hasBorder(int num) {
-    return num != 1;
   }
 }
