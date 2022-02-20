@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/mazes/data/maze_data.dart';
+import 'package:flutter_application_1/models/mazes/data/data.dart';
 import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
 
-class RectangularMaze extends StatelessWidget {
-  const RectangularMaze(
-    this.width,
-    this.height,
-    this.tiles,
-    this.lastValidMovement, {
+class RectangularMaze extends StatefulWidget {
+  const RectangularMaze({
     Key? key,
   }) : super(key: key);
 
-  final int width;
-  final int height;
-  final List<RectangularTile> tiles;
-  final RectangularMovement? lastValidMovement;
+  @override
+  State<RectangularMaze> createState() => _RectangularMazeState();
+}
+
+class _RectangularMazeState extends State<RectangularMaze> {
+  int width = 0;
+  int height = 0;
+  List<RectangularTile> tiles = [];
+  RectangularMovement? lastValidMovement;
 
   RectangularTile get currentTile => tiles.firstWhere((tile) => tile.occupied);
 
@@ -24,10 +25,37 @@ class RectangularMaze extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mazeData = RectangularMaze_7x7();
+
+    List<RectangularTile> mazeTiles = mazeData
+        .getMazeString()
+        .split("\n")
+        .where((line) => line.trim().isNotEmpty)
+        .map((line) {
+      List<String> sideConfigurations = line.split(" ").toList();
+
+      return RectangularTile(
+          side: RectangularSide(
+            up: int.parse(sideConfigurations[0]),
+            right: int.parse(sideConfigurations[1]),
+            down: int.parse(sideConfigurations[2]),
+            left: int.parse(sideConfigurations[3]),
+          ),
+          occupied:
+              sideConfigurations.length == 5 && sideConfigurations[4] == 'i');
+    }).toList();
+
+    width = mazeData.getWidth();
+    height = mazeData.getHeight();
+    tiles = mazeTiles;
+    lastValidMovement = null;
+
     return Column(
-        children: List.generate(tiles.length, (columnIndex) {
-      if (columnIndex % width == 0) {
-        return Row(
+      children: List.generate(
+        tiles.length,
+        (columnIndex) {
+          if (columnIndex % width == 0) {
+            return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 width,
@@ -76,48 +104,21 @@ class RectangularMaze extends StatelessWidget {
     );
   }
 
-  // TODO Render UI after creating maze
-  static RectangularMaze create(MazeData mazeData) {
-    List<RectangularTile> tiles = mazeData
-        .getMazeString()
-        .split("\n")
-        .where((line) => line.trim().isNotEmpty)
-        .map((line) {
-      List<String> sideConfigurations = line.split(" ").toList();
-
-      return RectangularTile(
-          side: RectangularSide(
-              up: int.parse(sideConfigurations[0]),
-              right: int.parse(sideConfigurations[1]),
-              down: int.parse(sideConfigurations[2]),
-              left: int.parse(sideConfigurations[3])),
-          occupied:
-              sideConfigurations.length == 5 && sideConfigurations[4] == 'i');
-    }).toList();
-
-    return RectangularMaze(
-      mazeData.getWidth(),
-      mazeData.getHeight(),
-      tiles,
-      null,
-    );
-  }
-
-  RectangularMaze moveCurrentTile(RectangularMovement movement) {
-    if (currentTile.getPossibleMoves(lastValidMovement).contains(movement)) {
-      tiles.setAll(currentTileIndex, [currentTile.leave()]);
-      RectangularTile nextTile = getNextTile(movement);
-      tiles.setAll(tiles.indexOf(nextTile), [nextTile.occupy()]);
-
-      return RectangularMaze(
-        width,
-        height,
-        tiles,
-        movement,
-      );
-    }
-    return this;
-  }
+  // RectangularMaze moveCurrentTile(RectangularMovement movement) {
+  //   if (currentTile.getPossibleMoves(lastValidMovement).contains(movement)) {
+  //     tiles.setAll(currentTileIndex, [currentTile.leave()]);
+  //     RectangularTile nextTile = getNextTile(movement);
+  //     tiles.setAll(tiles.indexOf(nextTile), [nextTile.occupy()]);
+  //
+  //     return RectangularMaze(
+  //       width,
+  //       height,
+  //       tiles,
+  //       movement,
+  //     );
+  //   }
+  //   return this;
+  // }
 
   RectangularTile getNextTile(RectangularMovement movement) {
     if (movement == RectangularMovement.up) {
