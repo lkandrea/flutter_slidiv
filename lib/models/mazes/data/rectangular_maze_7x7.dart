@@ -15,22 +15,22 @@ class RectangularMaze_7x7 implements MazeData {
 
   @override
   int getFinishX() {
-    return 6;
+    return 3;
   }
 
   @override
   int getFinishY() {
-    return 3;
+    return 6;
   }
 
   @override
   int getInitialX() {
-    return 0;
+    return 3;
   }
 
   @override
   int getInitialY() {
-    return 3;
+    return 0;
   }
 
   @override

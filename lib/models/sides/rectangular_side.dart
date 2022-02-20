@@ -16,16 +16,16 @@ class RectangularSide implements Side<RectangularMovement> {
   List<RectangularMovement> getBlankSides() {
     List<RectangularMovement> blankSides = [];
 
-    if (up == 0) {
+    if (up == 1) {
       blankSides.add(RectangularMovement.up);
     }
-    if (right == 0) {
+    if (right == 1) {
       blankSides.add(RectangularMovement.right);
     }
-    if (down == 0) {
+    if (down == 1) {
       blankSides.add(RectangularMovement.down);
     }
-    if (left == 0) {
+    if (left == 1) {
       blankSides.add(RectangularMovement.left);
     }
 

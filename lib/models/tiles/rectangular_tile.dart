@@ -11,17 +11,6 @@ class RectangularTile extends StatelessWidget {
   final RectangularSide side;
   final bool occupied;
 
-  //
-  // List<RectangularMovement> getPossibleMoves(
-  //     RectangularMovement? lastValidMovement) {
-  //   if ((occupied ?? widget.initOccupied) && lastValidMovement != null) {
-  //     List<RectangularMovement> blankSides = widget.side.getBlankSides();
-  //     blankSides.remove(lastValidMovement.getOpposite());
-  //     return blankSides;
-  //   }
-  //   return [];
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(

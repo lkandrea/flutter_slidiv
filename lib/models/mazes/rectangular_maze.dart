@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/extensions/extension_double.dart';
 import 'package:flutter_application_1/models/mazes/data/data.dart';
+import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
 
@@ -24,22 +26,27 @@ class RectangularMaze extends StatefulWidget {
 }
 
 class _RectangularMazeState extends State<RectangularMaze> {
-  List<List<RectangularTile>> mazeMap = [];
-  late int currentX = widget.initialX;
-  late int currentY = widget.initialY;
+  final List<List<RectangularTile>> _mazeMap = [];
+  late int _currentX = widget.initialX;
+  late int _currentY = widget.initialY;
+
+  Offset? panPositionDown;
+  Offset? panPositionStart;
 
   @override
   Widget build(BuildContext context) {
-    // Timer(const Duration(milliseconds: 2000), () {
-    //   setState(() {
-    //     currentX++;
-    //     currentY++;
-    //   });
-    // });
-
     return GestureDetector(
+      onTap: () {},
+      onPanDown: (panDownDetails) {
+        panPositionDown = panDownDetails.localPosition;
+      },
+      onPanStart: (panStartDetails) {
+        panPositionStart = panStartDetails.localPosition;
+        _checkMovement();
+      },
       child: ListView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.width,
         itemBuilder: (context, rowIndex) {
           final List<RectangularTile> mazeRow = [];
@@ -58,7 +65,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   down: int.parse(tileConfiguration[2]),
                   left: int.parse(tileConfiguration[3]),
                 ),
-                currentX == rowIndex && currentY == columnIndex,
+                _currentX == columnIndex && _currentY == rowIndex,
               );
 
               mazeRow.add(tile);
@@ -66,10 +73,68 @@ class _RectangularMazeState extends State<RectangularMaze> {
             }),
           );
 
-          if (mazeRow.isNotEmpty) mazeMap.add(mazeRow);
+          if (mazeRow.isNotEmpty) _mazeMap.add(mazeRow);
           return row;
         },
       ),
     );
+  }
+
+  void _checkMovement() {
+    final _movement = _parseMovement();
+    final _currentTile = _mazeMap[_currentY][_currentX];
+    final _currentBlankSide = _currentTile.side.getBlankSides();
+
+    if (_currentBlankSide.contains(_movement)) {
+      switch (_movement) {
+        case RectangularMovement.up:
+          setState(() {
+            _currentY--;
+          });
+          break;
+        case RectangularMovement.right:
+          setState(() {
+            _currentX++;
+          });
+          break;
+        case RectangularMovement.down:
+          setState(() {
+            _currentY++;
+          });
+          break;
+        case RectangularMovement.left:
+          setState(() {
+            _currentX--;
+          });
+          break;
+      }
+    }
+  }
+
+  RectangularMovement _parseMovement() {
+    final _deltaX =
+        (panPositionStart?.dx).orZero() - (panPositionDown?.dx).orZero();
+    final _deltaY =
+        (panPositionStart?.dy).orZero() - (panPositionDown?.dy).orZero();
+
+    if (_deltaX > 0) {
+      if (_deltaX.abs() > _deltaY.abs()) {
+        return RectangularMovement.right;
+      } else if (_deltaY < 0) {
+        return RectangularMovement.up;
+      } else if (_deltaY > 0) {
+        return RectangularMovement.down;
+      }
+    } else if (_deltaX < 0) {
+      if (_deltaX.abs() > _deltaY.abs()) {
+        return RectangularMovement.left;
+      } else if (_deltaY < 0) {
+        return RectangularMovement.up;
+      } else if (_deltaY > 0) {
+        return RectangularMovement.down;
+      }
+    }
+
+    return RectangularMovement.right;
   }
 }
