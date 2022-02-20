@@ -28,41 +28,52 @@ class RectangularMaze extends StatelessWidget {
         children: List.generate(tiles.length, (columnIndex) {
       if (columnIndex % width == 0) {
         return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(width, (rowIndex) {
-              RectangularTile tile = tiles.elementAt(columnIndex + rowIndex);
-              RectangularSide tileSide = tile.side;
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                width,
+                (rowIndex) {
+                  RectangularTile tile =
+                      tiles.elementAt(columnIndex + rowIndex);
+                  RectangularSide tileSide = tile.side;
 
-              return Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: Border(
-                        bottom: hasBorder(tileSide.down)
-                            ? BorderSide(width: inverse(tileSide.down))
-                            : BorderSide.none,
-                        left: hasBorder(tileSide.left)
-                            ? BorderSide(width: inverse(tileSide.left))
-                            : BorderSide.none,
-                        right: hasBorder(tileSide.right)
-                            ? BorderSide(width: inverse(tileSide.right))
-                            : BorderSide.none,
-                        top: hasBorder(tileSide.up)
-                            ? BorderSide(width: inverse(tileSide.up))
-                            : BorderSide.none),
-                    color: Colors.green[100],
-                  ),
-                  child: tile.occupied
-                      ? Container(
-                          decoration: const BoxDecoration(
+                  return Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: hasBorder(tileSide.down)
+                              ? BorderSide(width: inverse(tileSide.down))
+                              : BorderSide.none,
+                          left: hasBorder(tileSide.left)
+                              ? BorderSide(width: inverse(tileSide.left))
+                              : BorderSide.none,
+                          right: hasBorder(tileSide.right)
+                              ? BorderSide(width: inverse(tileSide.right))
+                              : BorderSide.none,
+                          top: hasBorder(tileSide.up)
+                              ? BorderSide(width: inverse(tileSide.up))
+                              : BorderSide.none),
+                      color: Colors.green[100],
+                    ),
+                    child: Visibility(
+                      visible: tile.occupied,
+                      child: Container(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.red,
-                        ))
-                      : Container());
-            }));
-      }
-      return Container();
-    }));
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+
+          return Container();
+        },
+      ),
+    );
   }
 
   // TODO Render UI after creating maze
