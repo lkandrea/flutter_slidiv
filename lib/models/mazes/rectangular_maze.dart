@@ -9,80 +9,41 @@ class RectangularMaze extends StatelessWidget {
     lastValidMovement = null;
   }
 
-  late final int width = 7;
-  late final int height = 7;
+  final int width = 7;
+  final int height = 7;
+  final mazeConfiguration = RectangularMaze_7x7()
+      .getMazeString()
+      .split("\n")
+      .where((line) => line.trim().isNotEmpty)
+      .toList();
+
   late final RectangularMovement? lastValidMovement;
 
   @override
   Widget build(BuildContext context) {
-    final mazeData = RectangularMaze_7x7();
-    final mazeTiles = mazeData
-        .getMazeString()
-        .split("\n")
-        .where((line) => line.trim().isNotEmpty)
-        .map((line) {
-      List<String> sideConfigurations = line.split(" ").toList();
-
-      return RectangularTile(
-        side: RectangularSide(
-          up: int.parse(sideConfigurations[0]),
-          right: int.parse(sideConfigurations[1]),
-          down: int.parse(sideConfigurations[2]),
-          left: int.parse(sideConfigurations[3]),
-        ),
-        occupied:
-            sideConfigurations.length == 5 && sideConfigurations[4] == 'i',
-      );
-    }).toList();
-
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: mazeTiles.length,
-      itemBuilder: (context, index) {
-        if (index % width == 0) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              width,
-              (rowIndex) {
-                RectangularTile tile = mazeTiles.elementAt(index + rowIndex);
-                RectangularSide tileSide = tile.side;
+      itemCount: width,
+      itemBuilder: (context, rowIndex) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(height, (columnIndex) {
+            List<String> tileConfiguration =
+                mazeConfiguration[rowIndex * width + columnIndex]
+                    .split(" ")
+                    .toList();
 
-                return Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: Border(
-                        bottom: hasBorder(tileSide.down)
-                            ? BorderSide(width: inverse(tileSide.down))
-                            : BorderSide.none,
-                        left: hasBorder(tileSide.left)
-                            ? BorderSide(width: inverse(tileSide.left))
-                            : BorderSide.none,
-                        right: hasBorder(tileSide.right)
-                            ? BorderSide(width: inverse(tileSide.right))
-                            : BorderSide.none,
-                        top: hasBorder(tileSide.up)
-                            ? BorderSide(width: inverse(tileSide.up))
-                            : BorderSide.none),
-                    color: Colors.green[100],
-                  ),
-                  child: Visibility(
-                    visible: tile.occupied,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        }
-
-        return Container();
+            return RectangularTile(
+              RectangularSide(
+                up: int.parse(tileConfiguration[0]),
+                right: int.parse(tileConfiguration[1]),
+                down: int.parse(tileConfiguration[2]),
+                left: int.parse(tileConfiguration[3]),
+              ),
+              tileConfiguration.last == 'i',
+            );
+          }),
+        );
       },
     );
   }
@@ -116,14 +77,4 @@ class RectangularMaze extends StatelessWidget {
   //   return tiles.elementAt(currentTileIndex - 1);
   // }
 
-  double inverse(int num) {
-    if (num == 1) {
-      return 0;
-    }
-    return 1;
-  }
-
-  bool hasBorder(int num) {
-    return num != 1;
-  }
 }
