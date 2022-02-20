@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/mazes/data/rectangular_maze_15x15.dart';
 import 'package:flutter_application_1/models/models.dart';
 
 void main() {
@@ -54,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            RectangularMaze(RectangularMaze_15x15()),
+            RectangularMaze(RectangularMaze_7x7()),
           ],
         ),
       ),

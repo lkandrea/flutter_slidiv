@@ -35,6 +35,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   @override
   Widget build(BuildContext context) {
+    _mazeMap.clear();
+
     return GestureDetector(
       onTap: () {},
       onPanDown: (panDownDetails) {
@@ -68,8 +70,23 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 _currentX == columnIndex && _currentY == rowIndex,
               );
 
+              final startColor = (widget.mazeData.getInitialY() == rowIndex &&
+                      widget.mazeData.getInitialX() == columnIndex)
+                  ? Colors.red.withOpacity(0.5)
+                  : null;
+
+              final endColor = (widget.mazeData.getFinishY() == rowIndex &&
+                  widget.mazeData.getFinishX() == columnIndex)
+                  ? Colors.blue.withOpacity(0.5)
+                  : null;
+
               mazeRow.add(tile);
-              return tile;
+              return Container(
+                foregroundDecoration: BoxDecoration(
+                  color: startColor ?? endColor,
+                ),
+                child: tile,
+              );
             }),
           );
 
