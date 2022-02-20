@@ -4,27 +4,8 @@ import 'package:flutter_application_1/models/movements/rectangular_movement.dart
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
 
-class RectangularMaze extends StatefulWidget {
-  const RectangularMaze({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<RectangularMaze> createState() => _RectangularMazeState();
-}
-
-class _RectangularMazeState extends State<RectangularMaze> {
-  int width = 0;
-  int height = 0;
-  List<RectangularTile> tiles = [];
-  RectangularMovement? lastValidMovement;
-
-  RectangularTile get currentTile => tiles.firstWhere((tile) => tile.occupied);
-
-  int get currentTileIndex => tiles.indexOf(currentTile);
-
-  @override
-  Widget build(BuildContext context) {
+class RectangularMaze extends StatelessWidget {
+  RectangularMaze({Key? key}) : super(key: key) {
     final mazeData = RectangularMaze_7x7();
 
     List<RectangularTile> mazeTiles = mazeData
@@ -49,7 +30,19 @@ class _RectangularMazeState extends State<RectangularMaze> {
     height = mazeData.getHeight();
     tiles = mazeTiles;
     lastValidMovement = null;
+  }
 
+  late final int width;
+  late final int height;
+  late final List<RectangularTile> tiles;
+  late final RectangularMovement? lastValidMovement;
+
+  RectangularTile get currentTile => tiles.firstWhere((tile) => tile.occupied);
+
+  int get currentTileIndex => tiles.indexOf(currentTile);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: List.generate(
         tiles.length,
