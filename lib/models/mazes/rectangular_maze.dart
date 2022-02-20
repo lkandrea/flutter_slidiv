@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/mazes/data/data.dart';
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
@@ -10,6 +8,9 @@ class RectangularMaze extends StatefulWidget {
 
   late final int width = mazeData.getWidth();
   late final int height = mazeData.getHeight();
+  late final int initialX = mazeData.getInitialX();
+  late final int initialY = mazeData.getInitialY();
+
   late final mazeConfiguration = mazeData
       .getMazeString()
       .split("\n")
@@ -24,15 +25,17 @@ class RectangularMaze extends StatefulWidget {
 
 class _RectangularMazeState extends State<RectangularMaze> {
   List<List<RectangularTile>> mazeMap = [];
-  String currentPosition = "1,1";
+  late int currentX = widget.initialX;
+  late int currentY = widget.initialY;
 
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(milliseconds: 1000), () {
-      // setState(() {
-      //   currentPosition = "2,2";
-      // });
-    });
+    // Timer(const Duration(milliseconds: 2000), () {
+    //   setState(() {
+    //     currentX++;
+    //     currentY++;
+    //   });
+    // });
 
     return GestureDetector(
       child: ListView.builder(
@@ -55,8 +58,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   down: int.parse(tileConfiguration[2]),
                   left: int.parse(tileConfiguration[3]),
                 ),
-                currentPosition[0] == rowIndex.toString() &&
-                    currentPosition[2] == columnIndex.toString(),
+                currentX == rowIndex && currentY == columnIndex,
               );
 
               mazeRow.add(tile);
