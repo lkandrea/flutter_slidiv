@@ -1,45 +1,95 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/mazes/data/maze_data.dart';
 import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
 
-class RectangularMaze {
-  const RectangularMaze({required this.width, required this.height, required this.tiles, required this.lastValidMovement});
+class RectangularMaze extends StatelessWidget {
+  const RectangularMaze(
+    this.width,
+    this.height,
+    this.tiles,
+    this.lastValidMovement, {
+    Key? key,
+  }) : super(key: key);
 
   final int width;
-
   final int height;
-
   final List<RectangularTile> tiles;
-
   final RectangularMovement? lastValidMovement;
 
   RectangularTile get currentTile => tiles.firstWhere((tile) => tile.occupied);
 
   int get currentTileIndex => tiles.indexOf(currentTile);
 
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        children: List.generate(tiles.length, (columnIndex) {
+      if (columnIndex % width == 0) {
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(width, (rowIndex) {
+              RectangularTile tile = tiles.elementAt(columnIndex + rowIndex);
+              RectangularSide tileSide = tile.side;
+
+              return Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: hasBorder(tileSide.down)
+                            ? BorderSide(width: inverse(tileSide.down))
+                            : BorderSide.none,
+                        left: hasBorder(tileSide.left)
+                            ? BorderSide(width: inverse(tileSide.left))
+                            : BorderSide.none,
+                        right: hasBorder(tileSide.right)
+                            ? BorderSide(width: inverse(tileSide.right))
+                            : BorderSide.none,
+                        top: hasBorder(tileSide.up)
+                            ? BorderSide(width: inverse(tileSide.up))
+                            : BorderSide.none),
+                    color: Colors.green[100],
+                  ),
+                  child: tile.occupied
+                      ? Container(
+                          decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ))
+                      : Container());
+            }));
+      }
+      return Container();
+    }));
+  }
+
   // TODO Render UI after creating maze
   static RectangularMaze create(MazeData mazeData) {
-    List<RectangularTile> tiles = mazeData.getMazeString()
-      .split("\n")
-      .where((line) => line.trim().isNotEmpty)
-      .map((line) {
-        List<String> sideConfigurations = line.split(" ")
-          .toList();
+    List<RectangularTile> tiles = mazeData
+        .getMazeString()
+        .split("\n")
+        .where((line) => line.trim().isNotEmpty)
+        .map((line) {
+      List<String> sideConfigurations = line.split(" ").toList();
 
-        return RectangularTile(
+      return RectangularTile(
           side: RectangularSide(
-            up: int.parse(sideConfigurations[0]), 
-            right: int.parse(sideConfigurations[1]), 
-            down: int.parse(sideConfigurations[2]), 
-            left: int.parse(sideConfigurations[3])
-          ),
-          occupied: sideConfigurations.length == 5 && sideConfigurations[4] == 'i'
-        );
-      })
-      .toList();
-    
-    return RectangularMaze(width: mazeData.getWidth(), height: mazeData.getHeight(), tiles: tiles, lastValidMovement: null);
+              up: int.parse(sideConfigurations[0]),
+              right: int.parse(sideConfigurations[1]),
+              down: int.parse(sideConfigurations[2]),
+              left: int.parse(sideConfigurations[3])),
+          occupied:
+              sideConfigurations.length == 5 && sideConfigurations[4] == 'i');
+    }).toList();
+
+    return RectangularMaze(
+      mazeData.getWidth(),
+      mazeData.getHeight(),
+      tiles,
+      null,
+    );
   }
 
   RectangularMaze moveCurrentTile(RectangularMovement movement) {
@@ -47,8 +97,13 @@ class RectangularMaze {
       tiles.setAll(currentTileIndex, [currentTile.leave()]);
       RectangularTile nextTile = getNextTile(movement);
       tiles.setAll(tiles.indexOf(nextTile), [nextTile.occupy()]);
-      
-      return RectangularMaze(width: width, height: height, tiles: tiles, lastValidMovement: movement);
+
+      return RectangularMaze(
+        width,
+        height,
+        tiles,
+        movement,
+      );
     }
     return this;
   }
@@ -64,5 +119,16 @@ class RectangularMaze {
       return tiles.elementAt(currentTileIndex + width);
     }
     return tiles.elementAt(currentTileIndex - 1);
+  }
+
+  double inverse(int num) {
+    if (num == 1) {
+      return 0;
+    }
+    return 1;
+  }
+
+  bool hasBorder(int num) {
+    return num != 1;
   }
 }
