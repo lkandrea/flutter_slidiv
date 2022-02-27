@@ -6,17 +6,24 @@ import 'package:flutter_application_1/models/sides/sides.dart';
 
 class RectangularTile extends StatelessWidget {
   const RectangularTile({
-    required this.side,
+    required this.tileConfiguration,
     required this.occupied,
     required this.tileColor,
     required this.movement,
     Key? key,
   }) : super(key: key);
 
-  final RectangularSide side;
+  final List<String> tileConfiguration;
   final bool occupied;
   final Color tileColor;
   final RectangularMovement? movement;
+
+  late final RectangularSide side = RectangularSide(
+    up: int.parse(tileConfiguration[0]),
+    right: int.parse(tileConfiguration[1]),
+    down: int.parse(tileConfiguration[2]),
+    left: int.parse(tileConfiguration[3]),
+  );
 
   @override
   Widget build(BuildContext context) {

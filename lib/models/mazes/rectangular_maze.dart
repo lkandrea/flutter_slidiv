@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/common/extensions/extension_double.dart';
 import 'package:flutter_application_1/models/mazes/data/data.dart';
 import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
-import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
 
 class RectangularMaze extends StatefulWidget {
@@ -64,12 +63,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   .toList();
 
               final tile = RectangularTile(
-                side: RectangularSide(
-                  up: int.parse(tileConfiguration[0]),
-                  right: int.parse(tileConfiguration[1]),
-                  down: int.parse(tileConfiguration[2]),
-                  left: int.parse(tileConfiguration[3]),
-                ),
+                tileConfiguration: tileConfiguration,
                 occupied: _currentX == columnIndex && _currentY == rowIndex,
                 tileColor: _mazeColor,
                   _mazeMovements[rowIndex][columnIndex]
@@ -81,7 +75,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   : null;
 
               final endColor = (widget.mazeData.getFinishY() == rowIndex &&
-                  widget.mazeData.getFinishX() == columnIndex)
+                      widget.mazeData.getFinishX() == columnIndex)
                   ? Colors.blue.withOpacity(0.5)
                   : null;
 
