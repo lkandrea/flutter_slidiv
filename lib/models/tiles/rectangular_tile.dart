@@ -5,11 +5,17 @@ import 'package:flutter_application_1/models/models.dart';
 import 'package:flutter_application_1/models/sides/sides.dart';
 
 class RectangularTile extends StatelessWidget {
-  const RectangularTile(this.side, this.occupied, this.movement, {Key? key})
-      : super(key: key);
+  const RectangularTile({
+    required this.side,
+    required this.occupied,
+    required this.tileColor,
+    required this.movement,
+    Key? key,
+  }) : super(key: key);
 
   final RectangularSide side;
   final bool occupied;
+  final Color tileColor;
   final RectangularMovement? movement;
 
   @override
@@ -31,13 +37,13 @@ class RectangularTile extends StatelessWidget {
           width: _tileSize,
           height: _tileSize,
           decoration: BoxDecoration(
+            color: tileColor,
             border: Border(
               bottom: _createBorder(side.down),
               left: _createBorder(side.left),
               right: _createBorder(side.right),
               top: _createBorder(side.up),
             ),
-            color: Colors.green[100],
           ),
           child: occupied ? Container(
             decoration: const BoxDecoration(
@@ -57,9 +63,11 @@ class RectangularTile extends StatelessWidget {
   }
 
   BorderSide _createBorder(int borderSide) {
-    return borderSide != 1
-        ? BorderSide(width: inverse(borderSide))
-        : BorderSide.none;
+    if (borderSide != 1) {
+      return const BorderSide(color: Colors.black);
+    } else {
+      return BorderSide.none;
+    }
   }
 
   double inverse(int num) {
