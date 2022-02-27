@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/extensions/extension_double.dart';
-import 'package:flutter_application_1/common/enum/direction_enum.dart';
-import 'package:flutter_application_1/data/maze_data.dart';
-import 'package:flutter_application_1/maze_rectangular/rectangular_tile.dart';
+import 'package:slidiv/common/extensions/extension_double.dart';
+import 'package:slidiv/common/enum/direction_enum.dart';
+import 'package:slidiv/data/maze_data.dart';
+import 'package:slidiv/maze_rectangular/rectangular_tile.dart';
 
 class RectangularMaze extends StatefulWidget {
   RectangularMaze(this.mazeData, {Key? key}) : super(key: key);

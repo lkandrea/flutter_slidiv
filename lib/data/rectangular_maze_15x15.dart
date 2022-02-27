@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/data/maze_data.dart';
+import 'package:slidiv/data/maze_data.dart';
 
 // ignore: camel_case_types
 class RectangularMaze_15x15 implements MazeData {

@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_application_1/common/enum/screen_size_enum.dart';
+import 'package:slidiv/common/enum/screen_size_enum.dart';
 
 class ResponsiveContainer extends StatelessWidget {
   const ResponsiveContainer({required this.child, Key? key}) : super(key: key);

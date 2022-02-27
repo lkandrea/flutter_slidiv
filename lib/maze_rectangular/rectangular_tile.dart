@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/enum/direction_enum.dart';
-import 'package:flutter_application_1/common/enum/screen_size_enum.dart';
-import 'package:flutter_application_1/common/widgets/responsive_container_widget.dart';
-import 'package:flutter_application_1/maze_rectangular/rectangular_side.dart';
+import 'package:slidiv/common/enum/direction_enum.dart';
+import 'package:slidiv/common/enum/screen_size_enum.dart';
+import 'package:slidiv/common/widgets/responsive_container_widget.dart';
+import 'package:slidiv/maze_rectangular/rectangular_side.dart';
 
 class RectangularTile extends StatelessWidget {
   RectangularTile({

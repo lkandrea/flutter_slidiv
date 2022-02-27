@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/common/enum/direction_enum.dart';
+import 'package:slidiv/common/enum/direction_enum.dart';
 
 class RectangularSide {
   const RectangularSide({
