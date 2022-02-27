@@ -5,7 +5,7 @@ import 'package:flutter_application_1/models/models.dart';
 import 'package:flutter_application_1/models/sides/sides.dart';
 
 class RectangularTile extends StatelessWidget {
-  const RectangularTile({
+  RectangularTile({
     required this.tileConfiguration,
     required this.occupied,
     required this.tileColor,

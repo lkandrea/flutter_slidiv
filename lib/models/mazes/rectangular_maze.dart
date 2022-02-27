@@ -28,7 +28,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
   final _mazeColor = Colors.green.shade100;
 
-  late final List<List<RectangularMovement?>> _mazeMovements = _initMazeMovements();
+  late final List<List<RectangularMovement?>> _mazeMovements =
+      _initMazeMovements();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
 
@@ -66,7 +67,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 tileConfiguration: tileConfiguration,
                 occupied: _currentX == columnIndex && _currentY == rowIndex,
                 tileColor: _mazeColor,
-                  _mazeMovements[rowIndex][columnIndex]
+                movement: _mazeMovements[rowIndex][columnIndex],
               );
 
               final startColor = (widget.mazeData.getInitialY() == rowIndex &&
@@ -169,16 +170,12 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   List<List<RectangularMovement?>> _initMazeMovements() {
     return List.generate(
-      widget.height,
-      (i) => List.generate(
-        widget.width,
-        (j) {
-          if (i == _currentY && j == _currentX) {
-            return RectangularMovement.down;
-          }
-          return null;
-        }
-      )
-    );
+        widget.height,
+        (i) => List.generate(widget.width, (j) {
+              if (i == _currentY && j == _currentX) {
+                return RectangularMovement.down;
+              }
+              return null;
+            }));
   }
 }
