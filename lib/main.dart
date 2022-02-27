@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/models.dart';
+
+import 'data/rectangular_maze_7x7.dart';
+import 'maze_rectangular/rectangular_maze.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,6 +1,7 @@
-import 'package:flutter_application_1/models/mazes/data/maze_data.dart';
 
 // ignore: camel_case_types
+import 'package:flutter_application_1/data/maze_data.dart';
+
 class RectangularMaze_7x7 implements MazeData {
 
   @override

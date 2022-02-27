@@ -1,4 +1,4 @@
-enum RectangularMovement {
+enum Direction {
   up,
   right,
   down,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/common/extensions/extension_double.dart';
-import 'package:flutter_application_1/models/mazes/data/data.dart';
-import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
-import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
+import 'package:flutter_application_1/common/enum/direction_enum.dart';
+import 'package:flutter_application_1/data/maze_data.dart';
+import 'package:flutter_application_1/maze_rectangular/rectangular_tile.dart';
 
 class RectangularMaze extends StatefulWidget {
   RectangularMaze(this.mazeData, {Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
   final _mazeColor = Colors.green.shade100;
 
-  late final List<List<RectangularMovement?>> _mazeMovements =
+  late final List<List<Direction?>> _mazeMovements =
       _initMazeMovements();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
@@ -67,7 +67,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 tileConfiguration: tileConfiguration,
                 occupied: _currentX == columnIndex && _currentY == rowIndex,
                 tileColor: _mazeColor,
-                movement: _mazeMovements[rowIndex][columnIndex],
+                direction: _mazeMovements[rowIndex][columnIndex],
               );
 
               final startColor = (widget.mazeData.getInitialY() == rowIndex &&
@@ -105,7 +105,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
     if (_currentBlankSide.contains(_movement)) {
       switch (_movement) {
-        case RectangularMovement.up:
+        case Direction.up:
           if (_mazeMovements[_currentY - 1][_currentX] == null) {
             setState(() {
               _mazeMovements[_currentY - 1][_currentX] = _movement;
@@ -113,7 +113,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
             });
           }
           break;
-        case RectangularMovement.right:
+        case Direction.right:
           if (_mazeMovements[_currentY][_currentX + 1] == null) {
             setState(() {
               _mazeMovements[_currentY][_currentX + 1] = _movement;
@@ -121,7 +121,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
             });
           }
           break;
-        case RectangularMovement.down:
+        case Direction.down:
           if (_mazeMovements[_currentY + 1][_currentX] == null) {
             setState(() {
               _mazeMovements[_currentY + 1][_currentX] = _movement;
@@ -129,7 +129,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
             });
           }
           break;
-        case RectangularMovement.left:
+        case Direction.left:
           if (_mazeMovements[_currentY][_currentX - 1] == null) {
             setState(() {
               _mazeMovements[_currentY][_currentX - 1] = _movement;
@@ -141,7 +141,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
     }
   }
 
-  RectangularMovement _parseMovement() {
+  Direction _parseMovement() {
     final _deltaX =
         (panPositionStart?.dx).orZero() - (panPositionDown?.dx).orZero();
     final _deltaY =
@@ -149,31 +149,31 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
     if (_deltaX > 0) {
       if (_deltaX.abs() > _deltaY.abs()) {
-        return RectangularMovement.right;
+        return Direction.right;
       } else if (_deltaY < 0) {
-        return RectangularMovement.up;
+        return Direction.up;
       } else if (_deltaY > 0) {
-        return RectangularMovement.down;
+        return Direction.down;
       }
     } else if (_deltaX < 0) {
       if (_deltaX.abs() > _deltaY.abs()) {
-        return RectangularMovement.left;
+        return Direction.left;
       } else if (_deltaY < 0) {
-        return RectangularMovement.up;
+        return Direction.up;
       } else if (_deltaY > 0) {
-        return RectangularMovement.down;
+        return Direction.down;
       }
     }
 
-    return RectangularMovement.right;
+    return Direction.right;
   }
 
-  List<List<RectangularMovement?>> _initMazeMovements() {
+  List<List<Direction?>> _initMazeMovements() {
     return List.generate(
         widget.height,
         (i) => List.generate(widget.width, (j) {
               if (i == _currentY && j == _currentX) {
-                return RectangularMovement.down;
+                return Direction.down;
               }
               return null;
             }));

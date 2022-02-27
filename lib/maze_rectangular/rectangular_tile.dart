@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/common/enum/direction_enum.dart';
 import 'package:flutter_application_1/common/enum/screen_size_enum.dart';
 import 'package:flutter_application_1/common/widgets/responsive_container_widget.dart';
-import 'package:flutter_application_1/models/models.dart';
-import 'package:flutter_application_1/models/sides/sides.dart';
+import 'package:flutter_application_1/maze_rectangular/rectangular_side.dart';
 
 class RectangularTile extends StatelessWidget {
   RectangularTile({
     required this.tileConfiguration,
     required this.occupied,
     required this.tileColor,
-    required this.movement,
+    required this.direction,
     Key? key,
   }) : super(key: key);
 
   final List<String> tileConfiguration;
   final bool occupied;
   final Color tileColor;
-  final RectangularMovement? movement;
+  final Direction? direction;
 
   late final RectangularSide side = RectangularSide(
     up: int.parse(tileConfiguration[0]),
@@ -60,8 +60,8 @@ class RectangularTile extends StatelessWidget {
           ) :
           // TODO Fix trail render
           Visibility(
-            visible: movement != null,
-            child: (movement == RectangularMovement.up || movement == RectangularMovement.down) ?
+            visible: direction != null,
+            child: (direction == Direction.up || direction == Direction.down) ?
             const VerticalDivider(color: Colors.red) : const Divider(color: Colors.red),
           ),
         );
