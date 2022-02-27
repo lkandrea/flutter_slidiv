@@ -40,30 +40,52 @@ class RectangularTile extends StatelessWidget {
             break;
         }
 
-        return Container(
-          width: _tileSize,
-          height: _tileSize,
-          decoration: BoxDecoration(
-            color: tileColor,
-            border: Border(
-              bottom: _createBorder(side.down),
-              left: _createBorder(side.left),
-              right: _createBorder(side.right),
-              top: _createBorder(side.up),
+        return Stack(
+          children: [
+            Container(
+              width: _tileSize,
+              height: _tileSize,
+              color: tileColor,
+              child: Stack(
+                children: [
+                  Visibility(
+                    visible: occupied,
+                    child: Container(
+                      margin: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                  // TODO Fix trail render
+                  Visibility(
+                    visible: !occupied && direction != null,
+                    child: SizedBox(
+                      width: _tileSize,
+                      height: _tileSize,
+                      child: (direction == Direction.up ||
+                              direction == Direction.down)
+                          ? const VerticalDivider(color: Colors.red)
+                          : const Divider(color: Colors.red),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          child: occupied ? Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.red,
-            ),
-          ) :
-          // TODO Fix trail render
-          Visibility(
-            visible: direction != null,
-            child: (direction == Direction.up || direction == Direction.down) ?
-            const VerticalDivider(color: Colors.red) : const Divider(color: Colors.red),
-          ),
+            Container(
+              width: _tileSize,
+              height: _tileSize,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: _createBorder(side.down),
+                  left: _createBorder(side.left),
+                  right: _createBorder(side.right),
+                  top: _createBorder(side.up),
+                ),
+              ),
+            )
+          ],
         );
       },
     );
