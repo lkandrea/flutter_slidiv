@@ -27,6 +27,7 @@ class RectangularMaze extends StatefulWidget {
 
 class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
+  late final List<List<RectangularMovement?>> _mazeMovements = _initMazeMovements();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
 
@@ -68,6 +69,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   left: int.parse(tileConfiguration[3]),
                 ),
                 _currentX == columnIndex && _currentY == rowIndex,
+                _mazeMovements[rowIndex][columnIndex]
               );
 
               final startColor = (widget.mazeData.getInitialY() == rowIndex &&
@@ -105,24 +107,36 @@ class _RectangularMazeState extends State<RectangularMaze> {
     if (_currentBlankSide.contains(_movement)) {
       switch (_movement) {
         case RectangularMovement.up:
-          setState(() {
-            _currentY--;
-          });
+          if (_mazeMovements[_currentY - 1][_currentX] == null) {
+            setState(() {
+              _mazeMovements[_currentY - 1][_currentX] = _movement;
+              _currentY--;
+            });
+          }
           break;
         case RectangularMovement.right:
-          setState(() {
-            _currentX++;
-          });
+          if (_mazeMovements[_currentY][_currentX + 1] == null) {
+            setState(() {
+              _mazeMovements[_currentY][_currentX + 1] = _movement;
+              _currentX++;
+            });
+          }
           break;
         case RectangularMovement.down:
-          setState(() {
-            _currentY++;
-          });
+          if (_mazeMovements[_currentY + 1][_currentX] == null) {
+            setState(() {
+              _mazeMovements[_currentY + 1][_currentX] = _movement;
+              _currentY++;
+            });
+          }
           break;
         case RectangularMovement.left:
-          setState(() {
-            _currentX--;
-          });
+          if (_mazeMovements[_currentY][_currentX - 1] == null) {
+            setState(() {
+              _mazeMovements[_currentY][_currentX - 1] = _movement;
+              _currentX--;
+            });
+          }
           break;
       }
     }
@@ -153,5 +167,20 @@ class _RectangularMazeState extends State<RectangularMaze> {
     }
 
     return RectangularMovement.right;
+  }
+
+  List<List<RectangularMovement?>> _initMazeMovements() {
+    return List.generate(
+      widget.height, 
+      (i) => List.generate(
+        widget.width, 
+        (j) {
+          if (i == _currentY && j == _currentX) {
+            return RectangularMovement.down;
+          }
+          return null;
+        }
+      )
+    );
   }
 }
