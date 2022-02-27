@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/extensions/extension_double.dart';
+import 'package:flutter_application_1/common/extensions/extension_double.dart';
 import 'package:flutter_application_1/models/mazes/data/data.dart';
 import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
-import 'package:flutter_application_1/models/sides/rectangular_side.dart';
 import 'package:flutter_application_1/models/tiles/rectangular_tile.dart';
 
 class RectangularMaze extends StatefulWidget {
@@ -27,7 +26,10 @@ class RectangularMaze extends StatefulWidget {
 
 class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
-  late final List<List<RectangularMovement?>> _mazeMovements = _initMazeMovements();
+  final _mazeColor = Colors.green.shade100;
+
+  late final List<List<RectangularMovement?>> _mazeMovements =
+      _initMazeMovements();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
 
@@ -62,14 +64,10 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   .toList();
 
               final tile = RectangularTile(
-                RectangularSide(
-                  up: int.parse(tileConfiguration[0]),
-                  right: int.parse(tileConfiguration[1]),
-                  down: int.parse(tileConfiguration[2]),
-                  left: int.parse(tileConfiguration[3]),
-                ),
-                _currentX == columnIndex && _currentY == rowIndex,
-                _mazeMovements[rowIndex][columnIndex]
+                tileConfiguration: tileConfiguration,
+                occupied: _currentX == columnIndex && _currentY == rowIndex,
+                tileColor: _mazeColor,
+                movement: _mazeMovements[rowIndex][columnIndex],
               );
 
               final startColor = (widget.mazeData.getInitialY() == rowIndex &&
@@ -78,12 +76,13 @@ class _RectangularMazeState extends State<RectangularMaze> {
                   : null;
 
               final endColor = (widget.mazeData.getFinishY() == rowIndex &&
-                  widget.mazeData.getFinishX() == columnIndex)
+                      widget.mazeData.getFinishX() == columnIndex)
                   ? Colors.blue.withOpacity(0.5)
                   : null;
 
               mazeRow.add(tile);
               return Container(
+                color: _mazeColor,
                 foregroundDecoration: BoxDecoration(
                   color: startColor ?? endColor,
                 ),
@@ -171,16 +170,12 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   List<List<RectangularMovement?>> _initMazeMovements() {
     return List.generate(
-      widget.height, 
-      (i) => List.generate(
-        widget.width, 
-        (j) {
-          if (i == _currentY && j == _currentX) {
-            return RectangularMovement.down;
-          }
-          return null;
-        }
-      )
-    );
+        widget.height,
+        (i) => List.generate(widget.width, (j) {
+              if (i == _currentY && j == _currentX) {
+                return RectangularMovement.down;
+              }
+              return null;
+            }));
   }
 }
