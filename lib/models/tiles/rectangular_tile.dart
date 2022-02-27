@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/models/models.dart';
 import 'package:flutter_application_1/models/sides/sides.dart';
 
 class RectangularTile extends StatelessWidget {
-  const RectangularTile(this.side, this.occupied, {Key? key})
+  const RectangularTile(this.side, this.occupied, this.movement, {Key? key})
       : super(key: key);
 
   final _tileWidth = 50.0;
@@ -10,6 +11,7 @@ class RectangularTile extends StatelessWidget {
 
   final RectangularSide side;
   final bool occupied;
+  final RectangularMovement? movement;
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +27,18 @@ class RectangularTile extends StatelessWidget {
         ),
         color: Colors.green[100],
       ),
-      child: Visibility(
-        visible: occupied,
-        child: Container(
+      child: occupied ? Container(
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.red,
           ),
+        ) : 
+        // TODO Fix trail render
+        Visibility(
+          visible: movement != null,
+          child: (movement == RectangularMovement.up || movement == RectangularMovement.down) ? 
+          const VerticalDivider(color: Colors.red) : const Divider(color: Colors.red),
         ),
-      ),
     );
   }
 
