@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/extensions/extension_double.dart';
+import 'package:flutter_application_1/common/extensions/extension_double.dart';
 import 'package:flutter_application_1/models/mazes/data/data.dart';
 import 'package:flutter_application_1/models/movements/rectangular_movement.dart';
 import 'package:flutter_application_1/models/sides/rectangular_side.dart';
