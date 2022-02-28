@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:slidiv/common/extensions/extension_double.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
+import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/data/maze_data.dart';
-import 'package:slidiv/maze_rectangular/rectangular_tile.dart';
+import 'package:slidiv/maze_widget/rectangular_tile.dart';
 
 class RectangularMaze extends StatefulWidget {
   RectangularMaze(this.mazeData, {Key? key}) : super(key: key);
@@ -28,8 +29,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
   final _mazeColor = Colors.green.shade100;
 
-  late final List<List<Direction?>> _mazeMovements =
-      _initMazeMovements();
+  late final List<List<Direction?>> _mazeMovements = _initMazeMovements();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
 
@@ -49,51 +49,71 @@ class _RectangularMazeState extends State<RectangularMaze> {
         panPositionStart = panStartDetails.localPosition;
         _checkMovement();
       },
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.width,
-        itemBuilder: (context, rowIndex) {
-          final List<RectangularTile> mazeRow = [];
-          final row = Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(widget.height, (columnIndex) {
-              List<String> tileConfiguration = widget
-                  .mazeConfiguration[rowIndex * widget.width + columnIndex]
-                  .split(" ")
-                  .toList();
+      child: Container(
+        color: Colors.grey.shade300,
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Hero(
+              tag: "slidiv_title_text",
+              child: Text(
+                "Slidiv",
+                style: SlidivBoldText(),
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(32.0),
+              itemCount: widget.width,
+              itemBuilder: (context, rowIndex) {
+                final List<RectangularTile> mazeRow = [];
+                final row = Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(widget.height, (columnIndex) {
+                    List<String> tileConfiguration = widget.mazeConfiguration[
+                            rowIndex * widget.width + columnIndex]
+                        .split(" ")
+                        .toList();
 
-              final tile = RectangularTile(
-                tileConfiguration: tileConfiguration,
-                occupied: _currentX == columnIndex && _currentY == rowIndex,
-                tileColor: _mazeColor,
-                direction: _mazeMovements[rowIndex][columnIndex],
-              );
+                    final tile = RectangularTile(
+                      tileConfiguration: tileConfiguration,
+                      occupied:
+                          _currentX == columnIndex && _currentY == rowIndex,
+                      tileColor: _mazeColor,
+                      direction: _mazeMovements[rowIndex][columnIndex],
+                    );
 
-              final startColor = (widget.mazeData.getInitialY() == rowIndex &&
-                      widget.mazeData.getInitialX() == columnIndex)
-                  ? Colors.red.withOpacity(0.5)
-                  : null;
+                    final startColor =
+                        (widget.mazeData.getInitialY() == rowIndex &&
+                                widget.mazeData.getInitialX() == columnIndex)
+                            ? Colors.red.withOpacity(0.5)
+                            : null;
 
-              final endColor = (widget.mazeData.getFinishY() == rowIndex &&
-                      widget.mazeData.getFinishX() == columnIndex)
-                  ? Colors.blue.withOpacity(0.5)
-                  : null;
+                    final endColor =
+                        (widget.mazeData.getFinishY() == rowIndex &&
+                                widget.mazeData.getFinishX() == columnIndex)
+                            ? Colors.blue.withOpacity(0.5)
+                            : null;
 
-              mazeRow.add(tile);
-              return Container(
-                color: _mazeColor,
-                foregroundDecoration: BoxDecoration(
-                  color: startColor ?? endColor,
-                ),
-                child: tile,
-              );
-            }),
-          );
+                    mazeRow.add(tile);
+                    return Container(
+                      color: _mazeColor,
+                      foregroundDecoration: BoxDecoration(
+                        color: startColor ?? endColor,
+                      ),
+                      child: tile,
+                    );
+                  }),
+                );
 
-          if (mazeRow.isNotEmpty) _mazeMap.add(mazeRow);
-          return row;
-        },
+                if (mazeRow.isNotEmpty) _mazeMap.add(mazeRow);
+                return row;
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -137,6 +157,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
             });
           }
           break;
+        case Direction.none:
+          break;
       }
     }
   }
@@ -147,7 +169,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
     final _deltaY =
         (panPositionStart?.dy).orZero() - (panPositionDown?.dy).orZero();
 
-    if (_deltaX > 0) {
+    if (_deltaX >= 0) {
       if (_deltaX.abs() > _deltaY.abs()) {
         return Direction.right;
       } else if (_deltaY < 0) {
@@ -165,7 +187,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
       }
     }
 
-    return Direction.right;
+    return Direction.none;
   }
 
   List<List<Direction?>> _initMazeMovements() {
