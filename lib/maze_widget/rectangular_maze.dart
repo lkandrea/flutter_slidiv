@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:slidiv/common/extensions/extension_double.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/data/maze_data.dart';
-import 'package:slidiv/maze_rectangular/rectangular_tile.dart';
+import 'package:slidiv/maze_widget/rectangular_tile.dart';
 
 class RectangularMaze extends StatefulWidget {
   RectangularMaze(this.mazeData, {Key? key}) : super(key: key);
@@ -137,6 +137,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
             });
           }
           break;
+        case Direction.none:
+          break;
       }
     }
   }
@@ -147,7 +149,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
     final _deltaY =
         (panPositionStart?.dy).orZero() - (panPositionDown?.dy).orZero();
 
-    if (_deltaX > 0) {
+    if (_deltaX >= 0) {
       if (_deltaX.abs() > _deltaY.abs()) {
         return Direction.right;
       } else if (_deltaY < 0) {
@@ -165,7 +167,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
       }
     }
 
-    return Direction.right;
+    return Direction.none;
   }
 
   List<List<Direction?>> _initMazeMovements() {

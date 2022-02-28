@@ -1,7 +1,6 @@
 import 'package:slidiv/data/maze_data.dart';
 
-// ignore: camel_case_types
-class RectangularMaze_7x7 implements MazeData {
+class RectangularMaze7x7 implements MazeData {
   @override
   int getWidth() {
     return 7;

@@ -2,5 +2,6 @@ enum Direction {
   up,
   right,
   down,
-  left
+  left,
+  none,
 }
