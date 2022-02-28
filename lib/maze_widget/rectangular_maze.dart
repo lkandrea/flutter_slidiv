@@ -193,11 +193,15 @@ class _RectangularMazeState extends State<RectangularMaze> {
   List<List<Direction?>> _initMazeMovements() {
     return List.generate(
         widget.height,
-        (i) => List.generate(widget.width, (j) {
-              if (i == _currentY && j == _currentX) {
-                return Direction.down;
-              }
-              return null;
-            }));
+        (rowIndex) => List.generate(
+          widget.width, 
+          (columnIndex) {
+            if (rowIndex == widget.initialY && columnIndex == widget.initialX) {
+              return Direction.down;
+            }
+            return null;
+          },
+        ),
+      );
   }
 }
