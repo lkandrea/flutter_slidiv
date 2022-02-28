@@ -28,8 +28,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
   final _mazeColor = Colors.green.shade100;
 
-  late final List<List<Direction?>> _mazeMovements =
-      _initMazeMovements();
+  late final List<List<Direction?>> _mazeMovements = _initMazeMovements();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
 
