@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slidiv/common/constant/hero_constants.dart';
 import 'package:slidiv/common/navigation/navigation_util.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/common/style/slidiv_normal_text.dart';
@@ -22,7 +23,7 @@ class TutorialPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Hero(
-              tag: "slidiv_title_text",
+              tag: HeroConstants.slidivTitle,
               child: Text(
                 "Slidiv Tutorial",
                 style: SlidivBoldText(),

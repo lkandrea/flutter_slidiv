@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slidiv/common/constant/hero_constants.dart';
 import 'package:slidiv/common/extensions/extension_double.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
@@ -57,7 +58,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Hero(
-              tag: "slidiv_title_text",
+              tag: HeroConstants.slidivTitle,
               child: Text(
                 "Slidiv",
                 style: SlidivBoldText(),
