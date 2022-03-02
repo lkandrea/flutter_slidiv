@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:slidiv/common/constant/hero_constants.dart';
-import 'package:slidiv/common/extensions/extension_double.dart';
+import 'package:slidiv/common/extensions/double_extension.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
+import 'package:slidiv/common/extensions/maze_data_extension.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/data/maze_data.dart';
 import 'package:slidiv/maze_widget/rectangular_tile.dart';
@@ -9,18 +10,13 @@ import 'package:slidiv/maze_widget/rectangular_tile.dart';
 class RectangularMaze extends StatefulWidget {
   RectangularMaze(this.mazeData, {Key? key}) : super(key: key);
 
-  late final int width = mazeData.getWidth();
-  late final int height = mazeData.getHeight();
-  late final int initialX = mazeData.getInitialX();
-  late final int initialY = mazeData.getInitialY();
-
-  late final mazeConfiguration = mazeData
-      .getMazeString()
-      .split("\n")
-      .where((line) => line.trim().isNotEmpty)
-      .toList();
-
   final MazeData mazeData;
+
+  late final width = mazeData.getWidth();
+  late final height = mazeData.getHeight();
+  late final initialX = mazeData.getInitialX();
+  late final initialY = mazeData.getInitialY();
+  late final mazeConfiguration = mazeData.toList();
 
   @override
   State<RectangularMaze> createState() => _RectangularMazeState();
