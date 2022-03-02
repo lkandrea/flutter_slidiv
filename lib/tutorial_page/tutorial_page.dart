@@ -3,8 +3,6 @@ import 'package:slidiv/common/constant/hero_constants.dart';
 import 'package:slidiv/common/navigation/navigation_util.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/common/style/slidiv_normal_text.dart';
-import 'package:slidiv/data/rectangular_maze_7x7_data.dart';
-import 'package:slidiv/maze_widget/rectangular_maze.dart';
 
 class TutorialPage extends StatelessWidget {
   const TutorialPage({Key? key}) : super(key: key);
@@ -37,7 +35,7 @@ class TutorialPage extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => _handleStartMaze(context),
+              onTap: () => NavigationUtil().navigateToLevelTwo(context),
               child: Container(
                 margin: const EdgeInsets.all(16.0),
                 padding: const EdgeInsets.symmetric(
@@ -66,12 +64,5 @@ class TutorialPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _handleStartMaze(BuildContext context) {
-    final _mazeData = RectangularMaze7x7();
-    final _mazeMap = RectangularMaze(_mazeData);
-
-    NavigationUtil.push(context, _mazeMap);
   }
 }
