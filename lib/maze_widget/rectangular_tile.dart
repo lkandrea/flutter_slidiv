@@ -3,20 +3,23 @@ import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/enum/screen_size_enum.dart';
 import 'package:slidiv/common/widgets/responsive_container_widget.dart';
 import 'package:slidiv/maze_widget/rectangular_side.dart';
+import 'package:slidiv/maze_widget/rectangular_trail.dart';
 
 class RectangularTile extends StatelessWidget {
   RectangularTile({
     required this.tileConfiguration,
     required this.occupied,
     required this.tileColor,
-    required this.direction,
+    required this.inDirection,
+    required this.outDirection,
     Key? key,
   }) : super(key: key);
 
   final List<String> tileConfiguration;
   final bool occupied;
   final Color tileColor;
-  final Direction? direction;
+  final Direction? inDirection;
+  final Direction? outDirection;
 
   late final RectangularSide side = RectangularSide(
     up: int.parse(tileConfiguration[0]),
@@ -58,18 +61,6 @@ class RectangularTile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // TODO Fix trail render
-                  Visibility(
-                    visible: !occupied && direction != null,
-                    child: SizedBox(
-                      width: _tileSize,
-                      height: _tileSize,
-                      child: (direction == Direction.up ||
-                              direction == Direction.down)
-                          ? const VerticalDivider(color: Colors.red)
-                          : const Divider(color: Colors.red),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -84,7 +75,17 @@ class RectangularTile extends StatelessWidget {
                   top: _createBorder(side.up),
                 ),
               ),
-            )
+            ),
+            Visibility(
+              visible: !occupied &&
+                  inDirection != null &&
+                  outDirection != null,
+              child: RectangularTrail(
+                tileSize: _tileSize,
+                inDirection: inDirection ?? Direction.none,
+                outDirection: outDirection ?? Direction.none,
+              ),
+            ),
           ],
         );
       },
