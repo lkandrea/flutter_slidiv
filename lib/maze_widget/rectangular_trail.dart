@@ -13,9 +13,6 @@ class RectangularTrail extends StatelessWidget {
   final Direction inDirection;
   final Direction outDirection;
 
-  late final SizedBox _defaultEmptyTrail =
-      SizedBox(width: tileSize, height: tileSize);
-
   double get _getHalfTileSize => tileSize / 2;
 
   static const _verticalDivider = VerticalDivider(
@@ -72,89 +69,29 @@ class RectangularTrail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (inDirection) {
-      case Direction.up:
-        return Stack(
-          children: [
-            _halfVerticalBottom,
-            _getTrailForInDirectionUp(),
-          ],
-        );
-      case Direction.right:
-        return Stack(
-          children: [
-            _halfHorizontalLeft,
-            _getTrailForInDirectionRight(),
-          ],
-        );
-      case Direction.down:
-        return Stack(
-          children: [
-            _halfVerticalTop,
-            _getTrailForInDirectionDown(),
-          ],
-        );
-      case Direction.left:
-        return Stack(
-          children: [
-            _halfHorizontalRight,
-            _getTrailForInDirectionLeft(),
-          ],
-        );
-      default:
-        return _defaultEmptyTrail;
-    }
-  }
-
-  Widget _getTrailForInDirectionUp() {
-    switch (outDirection) {
-      case Direction.right:
-        return _halfHorizontalRight;
-      case Direction.left:
-        return _halfHorizontalLeft;
-      case Direction.up:
-        return _halfVerticalTop;
-      default:
-        return _defaultEmptyTrail;
-    }
-  }
-
-  Widget _getTrailForInDirectionRight() {
-    switch (outDirection) {
-      case Direction.down:
-        return _halfVerticalBottom;
-      case Direction.right:
-        return _halfHorizontalRight;
-      case Direction.up:
-        return _halfVerticalTop;
-      default:
-        return _defaultEmptyTrail;
-    }
-  }
-
-  Widget _getTrailForInDirectionLeft() {
-    switch (outDirection) {
-      case Direction.down:
-        return _halfVerticalBottom;
-      case Direction.left:
-        return _halfHorizontalLeft;
-      case Direction.up:
-        return _halfVerticalTop;
-      default:
-        return _defaultEmptyTrail;
-    }
-  }
-
-  Widget _getTrailForInDirectionDown() {
-    switch (outDirection) {
-      case Direction.down:
-        return _halfVerticalBottom;
-      case Direction.left:
-        return _halfHorizontalLeft;
-      case Direction.right:
-        return _halfHorizontalRight;
-      default:
-        return _defaultEmptyTrail;
-    }
+    return Stack(
+      children: [
+        Visibility(
+          visible:
+              inDirection == Direction.right || outDirection == Direction.left,
+          child: _halfHorizontalLeft,
+        ),
+        Visibility(
+          visible:
+              inDirection == Direction.left || outDirection == Direction.right,
+          child: _halfHorizontalRight,
+        ),
+        Visibility(
+          visible:
+              inDirection == Direction.down || outDirection == Direction.up,
+          child: _halfVerticalTop,
+        ),
+        Visibility(
+          visible:
+              inDirection == Direction.up || outDirection == Direction.down,
+          child: _halfVerticalBottom,
+        ),
+      ],
+    );
   }
 }
