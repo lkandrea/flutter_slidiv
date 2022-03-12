@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/enum/screen_size_enum.dart';
 import 'package:slidiv/common/widgets/responsive_container_widget.dart';
+import 'package:slidiv/data/maze_data.dart';
+import 'package:slidiv/data/rectangular_maze_15x15_data.dart';
+import 'package:slidiv/data/rectangular_maze_7x7_data.dart';
 import 'package:slidiv/maze_widget/rectangular_side.dart';
 import 'package:slidiv/maze_widget/rectangular_trail.dart';
 
 class RectangularTile extends StatelessWidget {
   RectangularTile({
+    required this.mazeData,
     required this.tileConfiguration,
     required this.occupied,
     required this.tileColor,
@@ -15,6 +19,7 @@ class RectangularTile extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  final MazeData mazeData;
   final List<String> tileConfiguration;
   final bool occupied;
   final Color tileColor;
@@ -33,13 +38,24 @@ class RectangularTile extends StatelessWidget {
     return ResponsiveContainer(
       child: (context, screenSize) {
         final double _tileSize;
+        final double _divisionMultiplier;
 
+        switch (mazeData.runtimeType) {
+          case RectangularMaze7x7:
+            _divisionMultiplier = 1;
+            break;
+          case RectangularMaze15x15:
+            _divisionMultiplier = 1.5;
+            break;
+          default:
+            _divisionMultiplier = 1;
+        }
         switch (screenSize) {
           case ScreenSize.small:
-            _tileSize = 30.0;
+            _tileSize = 30.0 / _divisionMultiplier;
             break;
           case ScreenSize.large:
-            _tileSize = 50.0;
+            _tileSize = 50.0 / _divisionMultiplier;
             break;
         }
 
