@@ -29,7 +29,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
   final _mazeColor = Colors.green.shade100;
 
-  late final List<List<Direction?>> _mazeMovements = _initMazeMovements();
+  late final List<List<Direction?>> _mazeMoveInDirections = _initMazeMoveInDirections();
+  late final List<List<Direction?>> _mazeMoveOutDirections = _initMazeMoveOutDirections();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
 
@@ -82,7 +83,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
                       occupied:
                           _currentX == columnIndex && _currentY == rowIndex,
                       tileColor: _mazeColor,
-                      direction: _mazeMovements[rowIndex][columnIndex],
+                      inDirection: _mazeMoveInDirections[rowIndex][columnIndex],
+                      outDirection: _mazeMoveOutDirections[rowIndex][columnIndex],
                     );
 
                     final startColor =
@@ -126,33 +128,37 @@ class _RectangularMazeState extends State<RectangularMaze> {
     if (_currentBlankSide.contains(_movement)) {
       switch (_movement) {
         case Direction.up:
-          if (_mazeMovements[_currentY - 1][_currentX] == null) {
+          if (_mazeMoveInDirections[_currentY - 1][_currentX] == null) {
             setState(() {
-              _mazeMovements[_currentY - 1][_currentX] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
+              _mazeMoveInDirections[_currentY - 1][_currentX] = _movement;
               _currentY--;
             });
           }
           break;
         case Direction.right:
-          if (_mazeMovements[_currentY][_currentX + 1] == null) {
+          if (_mazeMoveInDirections[_currentY][_currentX + 1] == null) {
             setState(() {
-              _mazeMovements[_currentY][_currentX + 1] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
+              _mazeMoveInDirections[_currentY][_currentX + 1] = _movement;
               _currentX++;
             });
           }
           break;
         case Direction.down:
-          if (_mazeMovements[_currentY + 1][_currentX] == null) {
+          if (_mazeMoveInDirections[_currentY + 1][_currentX] == null) {
             setState(() {
-              _mazeMovements[_currentY + 1][_currentX] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
+              _mazeMoveInDirections[_currentY + 1][_currentX] = _movement;
               _currentY++;
             });
           }
           break;
         case Direction.left:
-          if (_mazeMovements[_currentY][_currentX - 1] == null) {
+          if (_mazeMoveInDirections[_currentY][_currentX - 1] == null) {
             setState(() {
-              _mazeMovements[_currentY][_currentX - 1] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
+              _mazeMoveInDirections[_currentY][_currentX - 1] = _movement;
               _currentX--;
             });
           }
@@ -190,14 +196,28 @@ class _RectangularMazeState extends State<RectangularMaze> {
     return Direction.none;
   }
 
-  List<List<Direction?>> _initMazeMovements() {
+  List<List<Direction?>> _initMazeMoveInDirections() {
     return List.generate(
         widget.height,
-        (i) => List.generate(widget.width, (j) {
-              if (i == _currentY && j == _currentX) {
-                return Direction.down;
-              }
-              return null;
-            }));
+        (rowIndex) => List.generate(
+          widget.width, 
+          (columnIndex) {
+            if (rowIndex == widget.initialY && columnIndex == widget.initialX) {
+              return Direction.down;
+            }
+            return null;
+          },
+        ),
+      );
+  }
+
+  List<List<Direction?>> _initMazeMoveOutDirections() {
+    return List.generate(
+        widget.height,
+        (rowIndex) => List.generate(
+          widget.width, 
+          (columnIndex) => null
+        ),
+      );
   }
 }
