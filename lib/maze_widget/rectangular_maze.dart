@@ -240,7 +240,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
     final _exactY = widget.mazeData.getFinishY() == _currentY;
 
     if (_exactX && _exactY) {
-      finished = true;
+      setState(() {
+        finished = true;
+      });
     }
   }
 
