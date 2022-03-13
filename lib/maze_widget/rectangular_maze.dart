@@ -5,6 +5,7 @@ import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/extensions/maze_data_extension.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/common/widgets/green_button.dart';
+import 'package:slidiv/common/widgets/stopwatch.dart';
 import 'package:slidiv/data/maze_data.dart';
 import 'package:slidiv/maze_widget/rectangular_tile.dart';
 
@@ -70,11 +71,23 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 ),
                 const SliverPadding(padding: EdgeInsets.all(8.0)),
                 SliverToBoxAdapter(
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const StopwatchWidget(),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          left: 4.0,
+                          right: 4.0,
+                        ),
+                        child: Text(
+                          "|",
+                          style: SlidivBoldText(fontSize: 16.0),
+                        ),
+                      ),
                       Text(
                         "Retry count: $_retry",
-                        style: const SlidivBoldText(fontSize: 20.0),
+                        style: const SlidivBoldText(fontSize: 16.0),
                       ),
                     ],
                   ),

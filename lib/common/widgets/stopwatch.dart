@@ -11,6 +11,7 @@ class StopwatchWidget extends StatefulWidget {
 
 class _StopwatchWidgetState extends State<StopwatchWidget> {
   int elapsedTicks = 0;
+  Timer? timer;
 
   String formatTime(int n) => n.toString().padLeft(2, '0');
 
@@ -21,13 +22,17 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      startStopwatch();
-    });
+    startStopwatch();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   void startStopwatch() {
-    Timer.periodic(
+    timer = Timer.periodic(
       const Duration(seconds: 1),
       (_) => setState(() {
         elapsedTicks++;
@@ -49,23 +54,6 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
           style: const SlidivBoldText(fontSize: 16.0),
         ),
       ],
-    );
-  }
-}
-
-class _TimeContainer extends StatelessWidget {
-  const _TimeContainer(this.time, {Key? key}) : super(key: key);
-
-  final String time;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(2),
-      child: Text(
-        time,
-        style: const SlidivBoldText(fontSize: 16.0),
-      ),
     );
   }
 }
