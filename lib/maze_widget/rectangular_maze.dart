@@ -59,6 +59,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
             color: Colors.grey.shade300,
             padding: const EdgeInsets.all(16.0),
             child: CustomScrollView(
+              physics: const NeverScrollableScrollPhysics(),
               slivers: [
                 const SliverToBoxAdapter(
                   child: Hero(
