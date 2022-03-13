@@ -99,12 +99,13 @@ class _RectangularMazeState extends State<RectangularMaze> {
             ),
           ),
           Visibility(
-            visible: !finished,
+            visible: finished,
             child: Container(
-              margin: const EdgeInsets.all(64.0),
+              margin: const EdgeInsets.only(top: 64.0),
+              padding: const EdgeInsets.only(top: 128.0),
               color: Colors.grey.shade300.withOpacity(0.9),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -112,15 +113,16 @@ class _RectangularMazeState extends State<RectangularMaze> {
                       Text(
                         "Congratulation, you finished this level!",
                         style: SlidivBoldText(),
+                        maxLines: 2,
                       ),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Congratulation, you finished this level!",
-                        style: SlidivBoldText(),
+                    children: [
+                      GreenButton(
+                        text: "Finish!",
+                        onTap: () => Navigator.pop(context),
                       ),
                     ],
                   ),
