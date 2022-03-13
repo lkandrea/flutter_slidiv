@@ -4,7 +4,7 @@ import 'package:slidiv/common/extensions/double_extension.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/extensions/maze_data_extension.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
-import 'package:slidiv/common/widgets/button.dart';
+import 'package:slidiv/common/widgets/green_button.dart';
 import 'package:slidiv/data/maze_data.dart';
 import 'package:slidiv/maze_widget/rectangular_tile.dart';
 
@@ -84,7 +84,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 onTap: () => _incrementRetryCount(),
                 child: Column(
                   children: const [
-                    Button(
+                    GreenButton(
                       "Reset",
                       fontSize: 16.0,
                     ),
