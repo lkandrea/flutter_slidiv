@@ -1,11 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 
 class Button extends StatelessWidget {
-  const Button(this.text, {Key? key}) : super(key: key);
+  const Button(
+    this.text, {
+    this.fontSize,
+    Key? key, 
+  }) : super(key: key);
 
   final String text;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,7 @@ class Button extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const SlidivBoldText(fontSize: 24.0),
+        style: SlidivBoldText(fontSize: fontSize ?? 24.0),
       ),
     );
   }
