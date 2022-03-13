@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SlidivNormalText extends TextStyle {
   const SlidivNormalText({double? fontSize})
@@ -6,5 +6,6 @@ class SlidivNormalText extends TextStyle {
           inherit: false,
           fontSize: fontSize ?? 16.0,
           fontWeight: FontWeight.normal,
+          color: Colors.black,
         );
 }
