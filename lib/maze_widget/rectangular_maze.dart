@@ -91,7 +91,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                     child: GreenButton(
                       text: "Reset",
                       fontSize: 16.0,
-                      onTap: () => _incrementRetryCount(),
+                      onTap: _resetProgress,
                     ),
                   ),
                 ),
@@ -307,7 +307,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
     );
   }
 
-  _incrementRetryCount() {
+  _resetProgress() {
     setState(() {
       _mazeMoveInDirections = _initMazeMoveInDirections();
       _mazeMoveOutDirections = _initMazeMoveOutDirections();
