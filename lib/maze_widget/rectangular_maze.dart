@@ -121,24 +121,15 @@ class _RectangularMazeState extends State<RectangularMaze> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Congratulation, you finished this level!",
-                        style: SlidivBoldText(),
-                        maxLines: 2,
-                      ),
-                    ],
+                  const Text(
+                    "Congratulation, you finished this level!",
+                    style: SlidivBoldText(),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GreenButton(
-                        text: "Finish!",
-                        onTap: () => Navigator.pop(context),
-                      ),
-                    ],
+                  GreenButton(
+                    text: "Finish!",
+                    onTap: () => Navigator.pop(context),
                   ),
                 ],
               ),
