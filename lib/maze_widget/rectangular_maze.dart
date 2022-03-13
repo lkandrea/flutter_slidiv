@@ -37,6 +37,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   Offset? panPositionDown;
   Offset? panPositionStart;
+  bool finished = false;
 
   @override
   Widget build(BuildContext context) {
@@ -142,17 +143,24 @@ class _RectangularMazeState extends State<RectangularMaze> {
   }
 
   void _checkMovement() {
-    final _movement = _parseMovement();
+    if (finished) return;
+
+    final _direction = _parseMovement();
+    _moveInto(_direction);
+    _checkFinished();
+  }
+
+  void _moveInto(Direction _direction) {
     final _currentTile = _mazeMap[_currentY][_currentX];
     final _currentBlankSide = _currentTile.side.getBlankSides();
 
-    if (_currentBlankSide.contains(_movement)) {
-      switch (_movement) {
+    if (_currentBlankSide.contains(_direction)) {
+      switch (_direction) {
         case Direction.up:
           if (_mazeMoveInDirections[_currentY - 1][_currentX] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY - 1][_currentX] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY - 1][_currentX] = _direction;
               _currentY--;
             });
           }
@@ -160,8 +168,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.right:
           if (_mazeMoveInDirections[_currentY][_currentX + 1] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY][_currentX + 1] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY][_currentX + 1] = _direction;
               _currentX++;
             });
           }
@@ -169,8 +177,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.down:
           if (_mazeMoveInDirections[_currentY + 1][_currentX] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY + 1][_currentX] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY + 1][_currentX] = _direction;
               _currentY++;
             });
           }
@@ -178,8 +186,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.left:
           if (_mazeMoveInDirections[_currentY][_currentX - 1] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY][_currentX - 1] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY][_currentX - 1] = _direction;
               _currentX--;
             });
           }
@@ -187,6 +195,14 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.none:
           break;
       }
+    }
+  }
+
+  void _checkFinished() {
+    final _exactX = widget.mazeData.getFinishX() == _currentX;
+    final _exactY = widget.mazeData.getFinishY() == _currentY;
+    if (_exactX && _exactY) {
+      finished = true;
     }
   }
 
