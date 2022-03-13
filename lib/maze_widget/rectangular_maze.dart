@@ -144,8 +144,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   void _checkMovement() {
     if (finished) return;
-
     final _direction = _parseMovement();
+
     _moveInto(_direction);
     _checkFinished();
   }
@@ -201,6 +201,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
   void _checkFinished() {
     final _exactX = widget.mazeData.getFinishX() == _currentX;
     final _exactY = widget.mazeData.getFinishY() == _currentY;
+
     if (_exactX && _exactY) {
       finished = true;
     }
@@ -212,7 +213,19 @@ class _RectangularMazeState extends State<RectangularMaze> {
     final _deltaY =
         (panPositionStart?.dy).orZero() - (panPositionDown?.dy).orZero();
 
-    if (_deltaX >= 0) {
+    if (_deltaX == 0) {
+      if (_deltaY < 0) {
+        return Direction.up;
+      } else if (_deltaY > 0) {
+        return Direction.down;
+      }
+    } else if (_deltaY == 0) {
+      if (_deltaX < 0) {
+        return Direction.left;
+      } else if (_deltaX > 0) {
+        return Direction.right;
+      }
+    } else if (_deltaX > 0) {
       if (_deltaX.abs() > _deltaY.abs()) {
         return Direction.right;
       } else if (_deltaY < 0) {
