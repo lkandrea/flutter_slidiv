@@ -35,11 +35,13 @@ class TutorialPage extends StatelessWidget {
                 style: SlidivNormalText(),
               ),
             ),
-            GestureDetector(
+            GreenButton(
+              text: "Level 1",
+              onTap: () => NavigationUtil().navigateToLevelOne(context),
+            ),
+            GreenButton(
+              text: "Level 2",
               onTap: () => NavigationUtil().navigateToLevelTwo(context),
-              child: const GreenButton(
-                "Start",
-              ),
             ),
           ],
         ),

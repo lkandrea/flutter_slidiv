@@ -4,7 +4,7 @@ import 'package:slidiv/common/extensions/double_extension.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/extensions/maze_data_extension.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
-import 'package:slidiv/common/widgets/button.dart';
+import 'package:slidiv/common/widgets/green_button.dart';
 import 'package:slidiv/data/maze_data.dart';
 import 'package:slidiv/maze_widget/rectangular_tile.dart';
 
@@ -37,6 +37,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   Offset? panPositionDown;
   Offset? panPositionStart;
+  bool finished = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,48 +52,85 @@ class _RectangularMazeState extends State<RectangularMaze> {
         panPositionStart = panStartDetails.localPosition;
         _checkMovement();
       },
-      child: Container(
-        color: Colors.grey.shade300,
-        padding: const EdgeInsets.all(16.0),
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: Hero(
-                tag: HeroConstants.slidivTitle,
-                child: Text("Slidiv", style: SlidivBoldText()),
-              ),
+      child: Stack(
+        children: [
+          Container(
+            color: Colors.grey.shade300,
+            padding: const EdgeInsets.all(16.0),
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(
+                  child: Hero(
+                    tag: HeroConstants.slidivTitle,
+                    child: Text(
+                      "Slidiv",
+                      style: SlidivBoldText(),
+                    ),
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.all(8.0)),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Retry count: $_retry",
+                        style: const SlidivBoldText(fontSize: 20.0),
+                      ),
+                    ],
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.all(8.0)),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildMazeItem(index),
+                    childCount: widget.width,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: GreenButton(
+                      text: "Reset",
+                      fontSize: 16.0,
+                      onTap: () => _incrementRetryCount(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SliverToBoxAdapter(
+          ),
+          Visibility(
+            visible: finished,
+            child: Container(
+              margin: const EdgeInsets.only(top: 64.0),
+              padding: const EdgeInsets.only(top: 128.0),
+              color: Colors.grey.shade300.withOpacity(0.9),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    "Retry count: $_retry",
-                    style: const SlidivBoldText(fontSize: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Congratulation, you finished this level!",
+                        style: SlidivBoldText(),
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GreenButton(
+                        text: "Finish!",
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildMazeItem(index),
-                childCount: widget.width,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: GestureDetector(
-                onTap: () => _incrementRetryCount(),
-                child: Column(
-                  children: const [
-                    Button(
-                      "Reset",
-                      fontSize: 16.0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -142,17 +180,24 @@ class _RectangularMazeState extends State<RectangularMaze> {
   }
 
   void _checkMovement() {
-    final _movement = _parseMovement();
+    if (finished) return;
+    final _direction = _parseMovement();
+
+    _moveInto(_direction);
+    _checkFinished();
+  }
+
+  void _moveInto(Direction _direction) {
     final _currentTile = _mazeMap[_currentY][_currentX];
     final _currentBlankSide = _currentTile.side.getBlankSides();
 
-    if (_currentBlankSide.contains(_movement)) {
-      switch (_movement) {
+    if (_currentBlankSide.contains(_direction)) {
+      switch (_direction) {
         case Direction.up:
           if (_mazeMoveInDirections[_currentY - 1][_currentX] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY - 1][_currentX] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY - 1][_currentX] = _direction;
               _currentY--;
             });
           }
@@ -160,8 +205,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.right:
           if (_mazeMoveInDirections[_currentY][_currentX + 1] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY][_currentX + 1] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY][_currentX + 1] = _direction;
               _currentX++;
             });
           }
@@ -169,8 +214,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.down:
           if (_mazeMoveInDirections[_currentY + 1][_currentX] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY + 1][_currentX] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY + 1][_currentX] = _direction;
               _currentY++;
             });
           }
@@ -178,8 +223,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
         case Direction.left:
           if (_mazeMoveInDirections[_currentY][_currentX - 1] == null) {
             setState(() {
-              _mazeMoveOutDirections[_currentY][_currentX] = _movement;
-              _mazeMoveInDirections[_currentY][_currentX - 1] = _movement;
+              _mazeMoveOutDirections[_currentY][_currentX] = _direction;
+              _mazeMoveInDirections[_currentY][_currentX - 1] = _direction;
               _currentX--;
             });
           }
@@ -190,13 +235,36 @@ class _RectangularMazeState extends State<RectangularMaze> {
     }
   }
 
+  void _checkFinished() {
+    final _exactX = widget.mazeData.getFinishX() == _currentX;
+    final _exactY = widget.mazeData.getFinishY() == _currentY;
+
+    if (_exactX && _exactY) {
+      setState(() {
+        finished = true;
+      });
+    }
+  }
+
   Direction _parseMovement() {
     final _deltaX =
         (panPositionStart?.dx).orZero() - (panPositionDown?.dx).orZero();
     final _deltaY =
         (panPositionStart?.dy).orZero() - (panPositionDown?.dy).orZero();
 
-    if (_deltaX >= 0) {
+    if (_deltaX == 0) {
+      if (_deltaY < 0) {
+        return Direction.up;
+      } else if (_deltaY > 0) {
+        return Direction.down;
+      }
+    } else if (_deltaY == 0) {
+      if (_deltaX < 0) {
+        return Direction.left;
+      } else if (_deltaX > 0) {
+        return Direction.right;
+      }
+    } else if (_deltaX > 0) {
       if (_deltaX.abs() > _deltaY.abs()) {
         return Direction.right;
       } else if (_deltaY < 0) {
