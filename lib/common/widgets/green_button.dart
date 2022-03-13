@@ -38,6 +38,7 @@ class GreenButton extends StatelessWidget {
         child: Text(
           text ?? "",
           style: SlidivBoldText(fontSize: fontSize ?? 24.0),
+          textAlign: TextAlign.center,
         ),
       ),
     );
