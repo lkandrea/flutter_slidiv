@@ -4,6 +4,7 @@ import 'package:slidiv/common/extensions/double_extension.dart';
 import 'package:slidiv/common/enum/direction_enum.dart';
 import 'package:slidiv/common/extensions/maze_data_extension.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
+import 'package:slidiv/common/widgets/button.dart';
 import 'package:slidiv/data/maze_data.dart';
 import 'package:slidiv/maze_widget/rectangular_tile.dart';
 
@@ -26,10 +27,13 @@ class _RectangularMazeState extends State<RectangularMaze> {
   final List<List<RectangularTile>> _mazeMap = [];
   final _mazeColor = Colors.green.shade100;
 
-  late final List<List<Direction?>> _mazeMoveInDirections = _initMazeMoveInDirections();
-  late final List<List<Direction?>> _mazeMoveOutDirections = _initMazeMoveOutDirections();
+  late List<List<Direction?>> _mazeMoveInDirections =
+      _initMazeMoveInDirections();
+  late List<List<Direction?>> _mazeMoveOutDirections =
+      _initMazeMoveOutDirections();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
+  int _retry = 0;
 
   Offset? panPositionDown;
   Offset? panPositionStart;
@@ -49,7 +53,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
       },
       child: Container(
         color: Colors.grey.shade300,
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(16.0),
         child: CustomScrollView(
           slivers: [
             const SliverToBoxAdapter(
@@ -58,15 +62,35 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 child: Text("Slidiv", style: SlidivBoldText()),
               ),
             ),
-            const SliverPadding(
-              padding: EdgeInsets.all(32.0),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Text(
+                    "Retry count: $_retry",
+                    style: const SlidivBoldText(fontSize: 20.0),
+                  ),
+                ],
+              ),
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) => _buildMazeItem(index),
                 childCount: widget.width,
               ),
-            )
+            ),
+            SliverToBoxAdapter(
+              child: GestureDetector(
+                onTap: () => _incrementRetryCount(),
+                child: Column(
+                  children: const [
+                    Button(
+                      "Reset",
+                      fontSize: 16.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -195,26 +219,33 @@ class _RectangularMazeState extends State<RectangularMaze> {
 
   List<List<Direction?>> _initMazeMoveInDirections() {
     return List.generate(
-        widget.height,
-        (rowIndex) => List.generate(
-          widget.width,
-          (columnIndex) {
-            if (rowIndex == widget.initialY && columnIndex == widget.initialX) {
-              return Direction.down;
-            }
-            return null;
-          },
-        ),
-      );
+      widget.height,
+      (rowIndex) => List.generate(
+        widget.width,
+        (columnIndex) {
+          if (rowIndex == widget.initialY && columnIndex == widget.initialX) {
+            return Direction.down;
+          }
+          return null;
+        },
+      ),
+    );
   }
 
   List<List<Direction?>> _initMazeMoveOutDirections() {
     return List.generate(
-        widget.height,
-        (rowIndex) => List.generate(
-          widget.width,
-          (columnIndex) => null
-        ),
-      );
+      widget.height,
+      (rowIndex) => List.generate(widget.width, (columnIndex) => null),
+    );
+  }
+
+  _incrementRetryCount() {
+    setState(() {
+      _mazeMoveInDirections = _initMazeMoveInDirections();
+      _mazeMoveOutDirections = _initMazeMoveOutDirections();
+      _currentX = widget.initialX;
+      _currentY = widget.initialY;
+      _retry += 1;
+    });
   }
 }
