@@ -13,7 +13,7 @@ class SlidivApp extends StatelessWidget {
     return MaterialApp(
       title: 'Slidiv',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const TutorialPage(),
+      home: const SafeArea(child: TutorialPage()),
     );
   }
 }
