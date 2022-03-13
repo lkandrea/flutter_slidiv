@@ -123,7 +123,7 @@ class RectangularMaze15x15 implements MazeData {
 0 1 0 1
 1 0 0 1
 0 0 1 0
-0 0 1 1
+0 0 1 0
 1 0 1 0
 0 1 1 0
 0 0 1 1
@@ -137,7 +137,7 @@ class RectangularMaze15x15 implements MazeData {
 0 1 0 1
 0 1 0 1
 0 1 0 1
-1 1 1 0
+1 0 1 1
 1 1 1 0
 1 0 0 1
 1 0 1 0
