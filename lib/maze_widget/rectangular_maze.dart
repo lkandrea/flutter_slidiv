@@ -52,48 +52,83 @@ class _RectangularMazeState extends State<RectangularMaze> {
         panPositionStart = panStartDetails.localPosition;
         _checkMovement();
       },
-      child: Container(
-        color: Colors.grey.shade300,
-        padding: const EdgeInsets.all(16.0),
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: Hero(
-                tag: HeroConstants.slidivTitle,
-                child: Text("Slidiv", style: SlidivBoldText()),
-              ),
+      child: Stack(
+        children: [
+          Container(
+            color: Colors.grey.shade300,
+            padding: const EdgeInsets.all(16.0),
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(
+                  child: Hero(
+                    tag: HeroConstants.slidivTitle,
+                    child: Text(
+                      "Slidiv",
+                      style: SlidivBoldText(),
+                    ),
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.all(8.0)),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Retry count: $_retry",
+                        style: const SlidivBoldText(fontSize: 20.0),
+                      ),
+                    ],
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.all(8.0)),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildMazeItem(index),
+                    childCount: widget.width,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: GreenButton(
+                      text: "Reset",
+                      fontSize: 16.0,
+                      onTap: () => _incrementRetryCount(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SliverToBoxAdapter(
+          ),
+          Visibility(
+            visible: !finished,
+            child: Container(
+              margin: const EdgeInsets.all(64.0),
+              color: Colors.grey.shade300.withOpacity(0.9),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Retry count: $_retry",
-                    style: const SlidivBoldText(fontSize: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Congratulation, you finished this level!",
+                        style: SlidivBoldText(),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        "Congratulation, you finished this level!",
+                        style: SlidivBoldText(),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => _buildMazeItem(index),
-                childCount: widget.width,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: GestureDetector(
-                onTap: () => _incrementRetryCount(),
-                child: Column(
-                  children: const [
-                    GreenButton(
-                      "Reset",
-                      fontSize: 16.0,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

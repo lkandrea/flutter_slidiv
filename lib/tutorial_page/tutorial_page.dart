@@ -4,7 +4,6 @@ import 'package:slidiv/common/navigation/navigation_util.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/common/style/slidiv_normal_text.dart';
 import 'package:slidiv/common/widgets/green_button.dart';
-import 'package:slidiv/tutorial_page/level_button_widget.dart';
 
 class TutorialPage extends StatelessWidget {
   const TutorialPage({Key? key}) : super(key: key);
@@ -36,19 +35,13 @@ class TutorialPage extends StatelessWidget {
                 style: SlidivNormalText(),
               ),
             ),
-            LevelButton(
+            GreenButton(
               text: "Level 1",
               onTap: () => NavigationUtil().navigateToLevelOne(context),
             ),
-            LevelButton(
+            GreenButton(
               text: "Level 2",
               onTap: () => NavigationUtil().navigateToLevelTwo(context),
-            ),
-            GestureDetector(
-              onTap: () => NavigationUtil().navigateToLevelTwo(context),
-              child: const GreenButton(
-                "Start",
-              ),
             ),
           ],
         ),
