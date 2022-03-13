@@ -122,7 +122,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Text(
-                    "Congratulation, you finished this level!",
+                    "Congratulations, you finished this level!",
                     style: SlidivBoldText(),
                     maxLines: 2,
                     textAlign: TextAlign.center,
