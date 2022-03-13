@@ -3,7 +3,7 @@ import 'package:slidiv/common/constant/hero_constants.dart';
 import 'package:slidiv/common/navigation/navigation_util.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 import 'package:slidiv/common/style/slidiv_normal_text.dart';
-import 'package:slidiv/common/widgets/button.dart';
+import 'package:slidiv/common/widgets/green_button.dart';
 
 class TutorialPage extends StatelessWidget {
   const TutorialPage({Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class TutorialPage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () => NavigationUtil().navigateToLevelTwo(context),
-              child: const Button(
+              child: const GreenButton(
                 "Start",
               ),
             ),

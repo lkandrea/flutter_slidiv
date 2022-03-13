@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:slidiv/common/style/slidiv_bold_text.dart';
 
-class Button extends StatelessWidget {
-  const Button(
+class GreenButton extends StatelessWidget {
+  const GreenButton(
     this.text, {
     this.fontSize,
     Key? key, 
