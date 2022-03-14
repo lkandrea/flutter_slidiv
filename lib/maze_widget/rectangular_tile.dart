@@ -135,6 +135,20 @@ class _RectangularTileState extends State<RectangularTile> {
               shape: BoxShape.circle,
               color: Colors.red,
             ),
+            child: Container(
+              margin: const EdgeInsets.all(2.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: widget.tileColor,
+              ),
+              child: Container(
+                margin: const EdgeInsets.all(2.0),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red,
+                ),
+              ),
+            ),
           ),
         ],
       ),

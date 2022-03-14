@@ -169,21 +169,19 @@ class _RectangularMazeState extends State<RectangularMaze> {
           outDirection: _mazeMoveOutDirections[rowIndex][columnIndex],
         );
 
-        final startColor = (widget.mazeData.getInitialY() == rowIndex &&
-                widget.mazeData.getInitialX() == columnIndex)
-            ? Colors.red.withOpacity(0.5)
-            : null;
+        final isStartPoint = widget.mazeData.getInitialY() == rowIndex &&
+            widget.mazeData.getInitialX() == columnIndex;
 
-        final endColor = (widget.mazeData.getFinishY() == rowIndex &&
-                widget.mazeData.getFinishX() == columnIndex)
-            ? Colors.blue.withOpacity(0.5)
-            : null;
+        final isEndPoint = widget.mazeData.getFinishY() == rowIndex &&
+            widget.mazeData.getFinishX() == columnIndex;
 
         mazeRow.add(tile);
         return Container(
           color: _mazeColor,
           foregroundDecoration: BoxDecoration(
-            color: startColor ?? endColor,
+            color: isStartPoint || isEndPoint
+                ? Colors.blue.withOpacity(0.1)
+                : null,
           ),
           child: tile,
         );
