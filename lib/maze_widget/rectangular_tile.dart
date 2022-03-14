@@ -89,16 +89,16 @@ class _RectangularTileState extends State<RectangularTile> {
               ),
             ),
             Visibility(
-              visible: widget.occupied || widget.prevOccupied,
-              child: _createPositionIndicator(_tileSize),
-            ),
-            Visibility(
-              visible: isAnimationFinished,
+              visible: isAnimationFinished && !widget.occupied,
               child: RectangularTrail(
                 tileSize: _tileSize,
-                inDirection: widget.inDirection ?? Direction.none,
-                outDirection: widget.outDirection ?? Direction.none,
+                inDirection: widget.inDirection,
+                outDirection: widget.outDirection,
               ),
+            ),
+            Visibility(
+              visible: widget.occupied || widget.prevOccupied,
+              child: _createPositionIndicator(_tileSize),
             ),
           ],
         );
@@ -108,7 +108,7 @@ class _RectangularTileState extends State<RectangularTile> {
 
   Widget _createPositionIndicator(double _tileSize) {
     return TweenAnimationBuilder(
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 150),
       tween: Tween(
         begin: widget.prevOccupied ? 0.0 : _tileSize,
         end: widget.prevOccupied ? _tileSize : 0.0,
@@ -119,6 +119,25 @@ class _RectangularTileState extends State<RectangularTile> {
           isAnimationFinished = true;
         });
       },
+      child: Stack(
+        children: [
+          RectangularTrail(
+            tileSize: _tileSize,
+            inDirection: widget.occupied ? widget.inDirection : null,
+            outDirection: null,
+            trailDivider: 3,
+          ),
+          Container(
+            width: _tileSize - 16.0,
+            height: _tileSize - 16.0,
+            margin: const EdgeInsets.all(8.0),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
       builder: (BuildContext context, Object? value, Widget? child) {
         double? _offsetValue = value as double;
         double? _offsetLeft;
@@ -173,15 +192,7 @@ class _RectangularTileState extends State<RectangularTile> {
           right: _offsetRight,
           top: _offsetTop,
           bottom: _offsetBottom,
-          child: Container(
-            width: _tileSize - 16.0,
-            height: _tileSize - 16.0,
-            margin: const EdgeInsets.all(8.0),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.red,
-            ),
-          ),
+          child: child ?? Container(),
         );
       },
     );
