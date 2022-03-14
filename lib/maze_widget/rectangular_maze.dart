@@ -34,11 +34,13 @@ class _RectangularMazeState extends State<RectangularMaze> {
       _initMazeMoveOutDirections();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
-  int _retry = 0;
 
   Offset? panPositionDown;
   Offset? panPositionStart;
   bool finished = false;
+  int _retry = 0;
+  int _prevX = -1;
+  int _prevY = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +155,7 @@ class _RectangularMazeState extends State<RectangularMaze> {
         final tile = RectangularTile(
           mazeData: widget.mazeData,
           tileConfiguration: tileConfiguration,
+          prevOccupied: _prevX == columnIndex && _prevY == rowIndex,
           occupied: _currentX == columnIndex && _currentY == rowIndex,
           tileColor: _mazeColor,
           inDirection: _mazeMoveInDirections[rowIndex][columnIndex],
@@ -203,6 +206,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY - 1][_currentX] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentY--;
             });
           }
@@ -212,6 +218,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY][_currentX + 1] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentX++;
             });
           }
@@ -221,6 +230,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY + 1][_currentX] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentY++;
             });
           }
@@ -230,6 +242,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY][_currentX - 1] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentX--;
             });
           }
@@ -318,6 +333,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
       _mazeMoveOutDirections = _initMazeMoveOutDirections();
       _currentX = widget.initialX;
       _currentY = widget.initialY;
+      _prevX = -1;
+      _prevY = -1;
       _retry += 1;
     });
   }
