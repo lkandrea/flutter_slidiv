@@ -116,25 +116,32 @@ class _RectangularMazeState extends State<RectangularMaze> {
           ),
           Visibility(
             visible: finished,
-            child: Container(
-              margin: const EdgeInsets.only(top: 64.0),
-              padding: const EdgeInsets.only(top: 128.0),
-              color: Colors.grey.shade300.withOpacity(0.9),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Congratulations, you finished this level!",
-                    style: SlidivBoldText(),
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Container(
+                  margin: const EdgeInsets.only(top: 64.0),
+                  padding: const EdgeInsets.only(top: 128.0),
+                  color: Colors.grey.shade300.withOpacity(0.9),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth,
+                        child: const Text(
+                          "Congratulations, you finished this level!",
+                          style: SlidivBoldText(),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      GreenButton(
+                        text: "Finish!",
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
-                  GreenButton(
-                    text: "Finish!",
-                    onTap: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
