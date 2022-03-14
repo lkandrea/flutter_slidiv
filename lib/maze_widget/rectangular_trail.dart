@@ -4,16 +4,18 @@ import 'package:slidiv/common/enum/direction_enum.dart';
 class RectangularTrail extends StatelessWidget {
   RectangularTrail({
     required this.tileSize,
-    required this.inDirection,
-    required this.outDirection,
+    this.inDirection,
+    this.outDirection,
+    this.trailDivider,
     Key? key,
   }) : super(key: key);
 
   final double tileSize;
-  final Direction inDirection;
-  final Direction outDirection;
+  final Direction? inDirection;
+  final Direction? outDirection;
+  final int? trailDivider;
 
-  double get _getHalfTileSize => tileSize / 2;
+  double get _getTrailSize => tileSize / (trailDivider ?? 2);
 
   static const _verticalDivider = VerticalDivider(
     thickness: 2,
@@ -27,7 +29,7 @@ class RectangularTrail extends StatelessWidget {
 
   late final Widget _halfVerticalTop = SizedBox(
     width: tileSize,
-    height: _getHalfTileSize,
+    height: _getTrailSize,
     child: _verticalDivider,
   );
 
@@ -39,7 +41,7 @@ class RectangularTrail extends StatelessWidget {
       children: [
         SizedBox(
           width: tileSize,
-          height: _getHalfTileSize,
+          height: _getTrailSize,
           child: _verticalDivider,
         )
       ],
@@ -47,7 +49,7 @@ class RectangularTrail extends StatelessWidget {
   );
 
   late final Widget _halfHorizontalLeft = SizedBox(
-    width: _getHalfTileSize,
+    width: _getTrailSize,
     height: tileSize,
     child: _horizontalDivider,
   );
@@ -59,7 +61,7 @@ class RectangularTrail extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         SizedBox(
-          width: _getHalfTileSize,
+          width: _getTrailSize,
           height: tileSize,
           child: _horizontalDivider,
         )

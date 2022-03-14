@@ -34,11 +34,13 @@ class _RectangularMazeState extends State<RectangularMaze> {
       _initMazeMoveOutDirections();
   late int _currentX = widget.initialX;
   late int _currentY = widget.initialY;
-  int _retry = 0;
 
   Offset? panPositionDown;
   Offset? panPositionStart;
   bool finished = false;
+  int _retry = 0;
+  int _prevX = -1;
+  int _prevY = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -114,25 +116,32 @@ class _RectangularMazeState extends State<RectangularMaze> {
           ),
           Visibility(
             visible: finished,
-            child: Container(
-              margin: const EdgeInsets.only(top: 64.0),
-              padding: const EdgeInsets.only(top: 128.0),
-              color: Colors.grey.shade300.withOpacity(0.9),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Congratulations, you finished this level!",
-                    style: SlidivBoldText(),
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Container(
+                  margin: const EdgeInsets.only(top: 64.0),
+                  padding: const EdgeInsets.only(top: 128.0),
+                  color: Colors.grey.shade300.withOpacity(0.9),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth,
+                        child: const Text(
+                          "Congratulations, you finished this level!",
+                          style: SlidivBoldText(),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      GreenButton(
+                        text: "Finish!",
+                        onTap: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
-                  GreenButton(
-                    text: "Finish!",
-                    onTap: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
@@ -153,27 +162,26 @@ class _RectangularMazeState extends State<RectangularMaze> {
         final tile = RectangularTile(
           mazeData: widget.mazeData,
           tileConfiguration: tileConfiguration,
+          prevOccupied: _prevX == columnIndex && _prevY == rowIndex,
           occupied: _currentX == columnIndex && _currentY == rowIndex,
           tileColor: _mazeColor,
           inDirection: _mazeMoveInDirections[rowIndex][columnIndex],
           outDirection: _mazeMoveOutDirections[rowIndex][columnIndex],
         );
 
-        final startColor = (widget.mazeData.getInitialY() == rowIndex &&
-                widget.mazeData.getInitialX() == columnIndex)
-            ? Colors.red.withOpacity(0.5)
-            : null;
+        final isStartPoint = widget.mazeData.getInitialY() == rowIndex &&
+            widget.mazeData.getInitialX() == columnIndex;
 
-        final endColor = (widget.mazeData.getFinishY() == rowIndex &&
-                widget.mazeData.getFinishX() == columnIndex)
-            ? Colors.blue.withOpacity(0.5)
-            : null;
+        final isEndPoint = widget.mazeData.getFinishY() == rowIndex &&
+            widget.mazeData.getFinishX() == columnIndex;
 
         mazeRow.add(tile);
         return Container(
           color: _mazeColor,
           foregroundDecoration: BoxDecoration(
-            color: startColor ?? endColor,
+            color: isStartPoint || isEndPoint
+                ? Colors.blue.withOpacity(0.1)
+                : null,
           ),
           child: tile,
         );
@@ -203,6 +211,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY - 1][_currentX] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentY--;
             });
           }
@@ -212,6 +223,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY][_currentX + 1] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentX++;
             });
           }
@@ -221,6 +235,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY + 1][_currentX] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentY++;
             });
           }
@@ -230,6 +247,9 @@ class _RectangularMazeState extends State<RectangularMaze> {
             setState(() {
               _mazeMoveOutDirections[_currentY][_currentX] = _direction;
               _mazeMoveInDirections[_currentY][_currentX - 1] = _direction;
+
+              _prevX = _currentX;
+              _prevY = _currentY;
               _currentX--;
             });
           }
@@ -318,6 +338,8 @@ class _RectangularMazeState extends State<RectangularMaze> {
       _mazeMoveOutDirections = _initMazeMoveOutDirections();
       _currentX = widget.initialX;
       _currentY = widget.initialY;
+      _prevX = -1;
+      _prevY = -1;
       _retry += 1;
     });
   }
